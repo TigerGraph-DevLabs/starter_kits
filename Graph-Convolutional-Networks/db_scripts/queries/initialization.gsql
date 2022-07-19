@@ -9,7 +9,7 @@ CREATE QUERY initialization(/* Parameters here */) FOR GRAPH CitationGraph SYNTA
    Starting from all PAPER vertices:
    (1) Normalize the weights on CITE edges according to the outdegrees(CITE) 
    of the source and target vertices
-   (2 )Normalize the weights on HAS edges according the outdegrees(HAS) of 
+   (2) Normalize the weights on HAS edges according the outdegrees(HAS) of 
    the PAPER vertices
    (3) Populate the words attribute with (word indx -> weight)
    (4) Split PAPER vertices into testing, validation and training sets
