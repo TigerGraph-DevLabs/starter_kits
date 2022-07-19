@@ -15,7 +15,8 @@ CREATE QUERY initialization(/* Parameters here */) FOR GRAPH CitationGraph SYNTA
    (4) Split PAPER vertices into testing, validation and training sets
   
 */
-	MapAccum<INT,DOUBLE> @word_Map;
+
+  MapAccum<INT,DOUBLE> @word_Map;
 	
   Papers = {PAPER.*};
 	
