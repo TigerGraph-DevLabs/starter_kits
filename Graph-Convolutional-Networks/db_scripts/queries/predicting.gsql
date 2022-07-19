@@ -1,4 +1,20 @@
 CREATE QUERY predicting() FOR GRAPH CitationGraph SYNTAX V2 { 
+
+/*
+	Predict paper predictions from CitationGraph and return
+	accuracy. 
+	
+	No inputs
+	
+	Start from WORD vertices:
+	(1) Load weights into layer 0 and 1
+	
+	Using PAPER vertices:
+	(1) Foward propagation 
+		(a) Convolve
+		(b) Hidden layers
+		
+*/
   ArrayAccum<SumAccum<DOUBLE>> @@W_0[1433][16]; #1433 by 16
 	ArrayAccum<SumAccum<DOUBLE>> @@W_1[16][7];   #16 by 7
 	SumAccum<DOUBLE> @@accurate_cnt;
