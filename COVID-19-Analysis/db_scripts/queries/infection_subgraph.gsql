@@ -1,45 +1,54 @@
-CREATE QUERY infection_subgraph(vertex<Patient> p) FOR GRAPH MyGraph SYNTAX V2 { 
-	/**********************************************************
-	 * This query takes a single patient and finds all all infections and potential infections. 
-	 * Potential infections are determined by who came into contact with this person 
-	 * (directly or indirectly) within the symptom onset to release date time frame.
-	 * 
-	 * Sample Input: 
-   * p: 4100000006
-   *********************************************************/
-	
-  DATETIME STARTTIME, ENDTIME;
-	OrAccum @visited;
-	SetAccum<EDGE> @@edge_set;
-  STARTTIME = p.symptom_onset_date;
-	ENDTIME = p.released_date;
-	
-	infected (ANY) = {p};
-	infected = select s from infected:s
-	           accum s.@visited = true;
-	
-	while infected.size() > 0 limit 100 do
-	  places = select t from infected:s-(PATIENT_TRAVELED:e)-TravelEvent:t
-	           where (t.visited_date >= STARTTIME and 
-							      t.visited_date <= ENDTIME and 
-							      t.outdegree("PATIENT_TRAVELED") > 1)
-	             and t.@visited == false
-	           accum t.@visited = true,
-	                 @@edge_set += e; 
-	
-	  same_place = select t from places:s-(PATIENT_TRAVELED:e)-Patient:t
-	              where t.@visited == false 
-	              accum t.@visited = true,
-	                    @@edge_set += e; 
-	
-	  people = select t from infected:s-(reverse_INFECTED_BY>:e)-:t
-	           where (STARTTIME <= t.symptom_onset_date and ENDTIME >= t.symptom_onset_date)
-	             and t.@visited == false
-	           accum t.@visited = true,
-	                 @@edge_set += e;
-	
-	  infected = same_place UNION people;
-	end;
-	
-	print @@edge_set;
+CREATE QUERY infection_subgraph(VERTEX<Patient> p) FOR GRAPH MyGraph SYNTAX V2 { 
+/*
+    Takes a single patient and finds all all infections and potential infections. 
+    Potential infections are determined by who came into contact with this person 
+    (directly or indirectly) within the symptom onset to release date time frame.
+
+    Sample inputs: 
+    p: 4100000006
+
+    Starting with a sample input,
+    (1) Mark the input patient as visited
+    (2) Find all travel events the patient had within the time symptom onset date and released dat and make them as visited
+    (3) Mark patients that also visited the same travel events as visited
+    (4) Union the patients from step three and the patients infected by the input patient
+    (5) Repeat step 2-4 till there are no patients left in step 4
+*/
+
+    DATETIME starttime, endtime;
+    OrAccum @visited;
+    SetAccum<EDGE> @@edge_set;
+    starttime = p.symptom_onset_date;
+    endtime = p.released_date;
+
+    infected (ANY) = {p};
+    infected = SELECT s 
+        FROM infected:s
+        ACCUM s.@visited = TRUE;
+
+    WHILE infected.size() > 0 LIMIT 100 DO
+        places = SELECT t 
+            FROM infected:s-(PATIENT_TRAVELED:e)-TravelEvent:t
+            WHERE (t.visited_date >= starttime AND 
+              t.visited_date <= endtime AND 
+              t.outdegree("PATIENT_TRAVELED") > 1) AND t.@visited == FALSE
+            ACCUM t.@visited = TRUE, @@edge_set += e; 
+
+        same_place = SELECT t 
+            FROM places:s-(PATIENT_TRAVELED:e)-Patient:t
+            WHERE t.@visited == FALSE 
+            ACCUM t.@visited = TRUE,
+              @@edge_set += e; 
+
+        people = SELECT t 
+            FROM infected:s-(reverse_INFECTED_BY>:e)-:t
+            WHERE (starttime <= t.symptom_onset_date AND endtime >= t.symptom_onset_date)
+              AND t.@visited == FALSE
+            ACCUM t.@visited = TRUE,
+              @@edge_set += e;
+
+        infected = same_place UNION people;
+    END;
+
+    PRINT @@edge_set;
 }

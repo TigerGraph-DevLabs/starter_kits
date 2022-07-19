@@ -1,15 +1,20 @@
-CREATE QUERY all_connection(VERTEX<Patient> p) FOR GRAPH MyGraph SYNTAX V2 { 
-  /******************************************
-	* Grabing all connections of a specified Patient
-  * Sample Input: 
-  * p: 4100000006
-	******************************************/
-  ListAccum<EDGE> @@edge_list;
-	seed = {p};
-	
-	S1 = SELECT s
-	     FROM seed:s -(:e)-:t
-	     ACCUM @@edge_list += e;
-	
-  PRINT  @@edge_list; 
+CREATE QUERY all_connection(VERTEX<Patient> p) FOR GRAPH MyGraph SYNTAX V2 {
+/*
+    Grabbing all connections of a specified Patient
+
+    Sample inputs: 
+    p: 4100000006
+
+    Starting with the patient input_patient,
+    (1) Accumulate all the edges connected to the input_patient
+*/
+
+    ListAccum<EDGE> @@edge_list;
+    input_patient = {p};
+
+    S1 = SELECT s
+        FROM input_patient:s -(:e)-:t
+        ACCUM @@edge_list += e;
+
+    PRINT @@edge_list; 
 }
