@@ -1,0 +1,88 @@
+CREATE QUERY display_products_by_customer_and_context(SET<VERTEX<customer>> 
+  input_customer_set, SET<VERTEX<context>> input_context_set) 
+  FOR GRAPH recommendation {
+/*
+    Recommend the highest rated product for a customer while taking into 
+    account the weather and the time of the day.
+
+    Sample inputs:
+    input_customer_set: C001
+    input_context_set: BW | T3 
+
+    Starting with the customers inputted,
+    (1) Calculate the product with the top score that is connected to both the
+      input customers and input context
+    (2) Display the edges and vertices connected to the top product
+*/
+
+    TYPEDEF TUPLE<VERTEX<product> v, DOUBLE avg_score> Order_Product_Tuple;
+
+    AvgAccum @product_avg_score;
+    HeapAccum<Order_Product_Tuple>(1, avg_score DESC) @@order_product_heap;
+    SetAccum<VERTEX<product>> @@order_product_vertex_set;
+    SetAccum<VERTEX<customer>> @@final_customer_vertex_set;
+    SetAccum<VERTEX<feature>> @@final_feature_vertex_set;
+    SetAccum<VERTEX<product>> @@final_product_vertex_set;
+    SetAccum<VERTEX<context>> @@final_context_vertex_set;
+    SetAccum<EDGE> @@final_context_feature_edge_set;
+    SetAccum<EDGE> @@final_product_feature_edge_set;
+    SetAccum<EDGE> @@final_product_context_edge_set;
+
+    customer_vertex_set = { input_customer_set };
+    context_vertex_set = { input_context_set };
+    product_vertex_set = SELECT p
+        FROM customer_vertex_set:c -(customer_feature:cf)- feature:f,
+          product:p -(product_feature:pf)- feature:f,
+          product:p -(product_context:pctx)- context_vertex_set:ctx
+        ACCUM p.@product_avg_score += (cf.affinity * pf.weight) /* calculate 
+          the average product score */
+        POST-ACCUM @@order_product_heap += Order_Product_Tuple(p, 
+          p.@product_avg_score); // add to heap accum to get top product
+
+    WHILE (@@order_product_heap.size() > 0) DO // add top product to vertex set
+        @@order_product_vertex_set += @@order_product_heap.pop().v; 
+    END;
+    product_vertex_set = { @@order_product_vertex_set };
+
+    // accumulate the vertices and edges
+    product_vertex_set = SELECT p
+        FROM customer_vertex_set:c -(customer_feature:cf)- feature:f,
+          product_vertex_set:p -(product_feature:pf)- feature:f,
+          product_vertex_set:p -(product_context:pctx)- context_vertex_set:ctx
+        ACCUM @@final_context_feature_edge_set += cf,
+          @@final_product_feature_edge_set += pf,
+          @@final_product_context_edge_set += pctx
+        POST-ACCUM @@final_customer_vertex_set += c
+        POST-ACCUM @@final_feature_vertex_set += f
+        POST-ACCUM @@final_product_vertex_set += p
+        POST-ACCUM @@final_context_vertex_set += ctx;
+
+    // display the values
+    PRINT @@final_context_feature_edge_set;
+    PRINT @@final_product_feature_edge_set;
+    PRINT @@final_product_context_edge_set;
+
+    customer_vertex_set = { @@final_customer_vertex_set };
+    PRINT customer_vertex_set[
+      customer_vertex_set.name AS name
+    ];
+
+    feature_vertex_set = { @@final_feature_vertex_set };
+    PRINT feature_vertex_set[
+      feature_vertex_set.name AS name
+    ];
+
+    product_vertex_set = { @@final_product_vertex_set };
+    PRINT product_vertex_set[
+      product_vertex_set.name AS name,
+      product_vertex_set.latitude AS latitude,
+      product_vertex_set.longitude AS longitude,
+      product_vertex_set.@product_avg_score AS avg_score
+    ];
+
+    context_vertex_set = { @@final_context_vertex_set };
+    PRINT context_vertex_set[
+      context_vertex_set.ctxValue AS ctxValue
+    ];
+
+}

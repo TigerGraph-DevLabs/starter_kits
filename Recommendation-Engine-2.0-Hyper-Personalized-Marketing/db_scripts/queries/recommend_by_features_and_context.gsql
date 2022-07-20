@@ -1,0 +1,64 @@
+CREATE QUERY recommend_by_features_and_context(VERTEX <customer> source_customer,
+  STRING weather, STRING time_of_day, INT top_k) FOR GRAPH recommendation { 
+/*
+    Return the top K highest rated product for a customer while taking into
+    account the weather and time of day.
+
+    Sample inputs:
+    source_customer: C001 
+    weather: <blank> | GW | BW 
+    time_of_day: <blank> | T1 | T2 | T3 | T4
+    top_k: any number > 0
+
+    If a weather and/or a time of day is provided, starting from all the products,
+    (1) Find all the vertices with all of the inputs provided and mark them
+    product -(product_context)- context
+    Starting from a "source_customer",
+    (1) Find all the features of the source customer and products of those 
+    features (using only the candidate vertices from the previous filter
+    if time or weather was inputted)
+    source_customer - (customer_feature) - feature - (product_feature) - product
+    (2) Assign each product a score of the sum of the product_feature weight 
+    times the affinity and order the products by the score
+    (3) Print the top k products
+*/
+
+    SumAccum <FLOAT> @cf_affinity;
+    MaxAccum <FLOAT> @score; 
+    SumAccum <UINT>  @filters = 0;
+    OrAccum @candidate_flag; 
+    UINT min_filters = 0;
+
+    start = {source_customer};
+
+    IF time_of_day != "" THEN min_filters += 1; END;
+    IF weather != "" THEN min_filters += 1; END;
+
+    candidate_products = { product.* }; // start with all products
+
+    IF min_filters != 0 THEN
+        candidate_products = SELECT p 
+            FROM candidate_products:p -(product_context:pc)- context:c
+            WHERE c.id == weather OR c.id == time_of_day /* filter products that
+              match the inputted parameters */
+            ACCUM p.@filters += 1
+            HAVING p.@filters >= min_filters; // must have all provided parameters
+
+        candidate_products = SELECT p 
+            FROM candidate_products:p
+            POST-ACCUM p.@candidate_flag = TRUE; // mark candidate products
+    END;
+
+    features = SELECT f 
+        FROM start:s -(customer_feature:cf)- feature:f
+        ACCUM f.@cf_affinity = cf.affinity; // flow affinity along edge to feature
+
+    products = SELECT p 
+        FROM features:f -(product_feature:pf)- product:p
+        WHERE p.@candidate_flag OR min_filters == 0
+        ACCUM p.@score += pf.weight*f.@cf_affinity
+        ORDER BY p.@score DESC
+        LIMIT top_k; // list the top k products ranked by their score
+
+    PRINT products;
+}

@@ -1,0 +1,72 @@
+CREATE QUERY display_top_demographic() FOR GRAPH recommendation {
+/*
+    Display the demographic with the highest average affinity and customers and
+    features related to the demographic.
+
+    Starting with all demographic vertices:
+    (1) Find the demographic with the highest average score (multiplying the 
+    demographic feature and customer feature affinities)
+    (2) Display the customers and features connected to the demographic
+*/
+
+    TYPEDEF TUPLE<VERTEX<demographic> v, DOUBLE avg_score> Order_Demographic_Tuple;
+
+    AvgAccum @demographic_avg_score;
+    HeapAccum<Order_Demographic_Tuple>(1, avg_score DESC) @@order_product_heap;
+    SetAccum<VERTEX<demographic>> @@order_demographic_vertex_set;
+    SetAccum<EDGE> @@final_demo_customer_edge_set;
+    SetAccum<EDGE> @@final_demo_feature_edge_set;
+    SetAccum<EDGE> @@final_context_feature_edge_set;
+    SetAccum<VERTEX<demographic>> @@final_demographic_vertex_set;
+    SetAccum<VERTEX<customer>> @@final_customer_vertex_set;
+    SetAccum<VERTEX<feature>> @@final_feature_vertex_set;
+
+    vertex_set_1 = SELECT d
+        FROM demographic:d -(demo_customer:dc)- customer:c,
+          demographic:d -(demo_feature:df)- feature:f,
+          customer:c -(customer_feature:cf)- feature:f
+        ACCUM d.@demographic_avg_score += (cf.affinity * df.affinity) /* avg
+          demographic score */
+        POST-ACCUM @@order_product_heap += Order_Demographic_Tuple(d, 
+          d.@demographic_avg_score); // demographic with highest average score
+
+    WHILE (@@order_product_heap.size() > 0) DO
+        @@order_demographic_vertex_set += @@order_product_heap.pop().v;
+    END;
+    demographic_vertex_set = { @@order_demographic_vertex_set }; // top product
+
+    // accumulate the vertices and edges
+    demographic_vertex_set = SELECT d
+        FROM demographic_vertex_set:d -(demo_customer:dc)- customer:c,
+          demographic_vertex_set:d -(demo_feature:df)- feature:f,
+          customer:c -(customer_feature:cf)- feature:f
+        ACCUM @@final_demo_customer_edge_set += dc,
+          @@final_demo_feature_edge_set += df,
+          @@final_context_feature_edge_set += cf
+        POST-ACCUM @@final_demographic_vertex_set += d
+        POST-ACCUM @@final_customer_vertex_set += c
+        POST-ACCUM @@final_feature_vertex_set += f;
+
+    // display the values
+    PRINT @@final_demo_customer_edge_set;
+    PRINT @@final_demo_feature_edge_set;
+    PRINT @@final_context_feature_edge_set;
+
+    demographic_vertex_set = { @@final_demographic_vertex_set };
+    PRINT demographic_vertex_set[
+      demographic_vertex_set.name AS name,
+      demographic_vertex_set.@demographic_avg_score 
+        AS avg_of_cf_affinity_times_df_affinity
+    ];
+
+    customer_vertex_set = { @@final_customer_vertex_set };
+    PRINT customer_vertex_set[
+      customer_vertex_set.name AS name
+    ];
+
+    feature_vertex_set = { @@final_feature_vertex_set };
+    PRINT feature_vertex_set[
+      feature_vertex_set.name AS name
+    ];
+
+}

@@ -1,0 +1,11 @@
+CREATE QUERY README() FOR GRAPH recommendation {
+    String README = "Recommendation Engine 2.0 (Hyper-Personalized Marketing)",
+    "Using graph to gain better insights on products and customers",
+    "The queries can be run in any other to investiage top products and demographics",
+    "rank_product.gsql and display_products_by_customer_and_context.gsql",
+    "both find top products based on inputs of customers and context",
+    "display_top_demographic.gsql returns the top demographic with its",
+    "connected customers and features";
+
+    PRINT README;
+}
