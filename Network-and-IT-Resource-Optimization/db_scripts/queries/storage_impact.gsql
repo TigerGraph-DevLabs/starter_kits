@@ -1,4 +1,21 @@
 CREATE QUERY storage_impact(string vertexType, vertex input) FOR GRAPH Storage SYNTAX V2 { 
+
+/*
+    Detect edges that differ from the input type where their goUpper 
+    attribute is true.
+
+    Sample inputs:
+    vertexType: Application
+    input: 
+
+    Starting from an vertex input,
+    (1) Find all the vertices with an edge to the input where the 
+    goUpper attribute for the edge is true 
+    (2) Add the edges to a global sum accumulator
+    (3) Return the edge list
+
+*/
+
   
   OrAccum<BOOL>
   @@stop;
