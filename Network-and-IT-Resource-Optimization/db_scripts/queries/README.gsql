@@ -1,6 +1,10 @@
 CREATE QUERY README() FOR GRAPH Storage {
-    PRINT "Network and IT resource graph for modeling and analyzing"; 
-    PRINT "the impact of the hardware outage on workloads.";
+    /* 
+    Network and IT resource graph for modeling and analyzing 
+    the impact of the hardware outage on workloads. 
+    
+    The queries do not need to be run in a specific order.
+    */
 
-    PRINT "The queries do not need to be run in a specific order.";
+    PRINT "README worked!"; 
 }
