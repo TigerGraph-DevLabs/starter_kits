@@ -1,4 +1,19 @@
 CREATE QUERY warning_impact(vertex<Warning> inputWarn) FOR GRAPH Storage SYNTAX V2 { 
+/*
+    Returns Alert_App, App_Service, and Service Manager edges related 
+    to a warning vertex. 
+
+    Sample inputs:
+    inputWarn:
+
+    Starting from an "inputWarn",
+    (1) Select all applications connected to the warning and add to 
+    edge list
+    (2) Select all services related to the applications from part (1)
+    (3) Select all managers related to the services from part (2)
+    
+*/
+
   
   ListAccum<EDGE>
   @@edge_List;
