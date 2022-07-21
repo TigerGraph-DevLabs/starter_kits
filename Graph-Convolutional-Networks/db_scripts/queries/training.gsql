@@ -22,15 +22,6 @@ FOR GRAPH CitationGraph SYNTAX V2 {
 	
 	No sample inputs
 	
-	Default inputs:
-	alpha0 = 0.4
-	Adam = True
-	beta1 = 0.9
-	beta2 = 0.999
-	keepProb = 1.0
-	lambda = 0.00005
-	MaxIter = 10
-	
 	Start with all WORD vertices:
 	(1) Load weights into layer 0 and layer 1
 	
