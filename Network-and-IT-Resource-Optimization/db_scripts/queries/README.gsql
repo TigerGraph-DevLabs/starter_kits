@@ -1,10 +1,14 @@
 CREATE QUERY README() FOR GRAPH Storage {
-    /* 
-    Network and IT resource graph for modeling and analyzing 
-    the impact of the hardware outage on workloads. 
+    STRING graph_description = "Network and IT resource graph for modeling and analyzing 
+        the impact of the hardware outage on workloads.";
+        
+    STRING query_order = "no order"; 
+    STRING app_impact = "Detect the top k applications which have the most impact on a given
+        application.";
+    STRING storage_impact = "Detect edges that differ from the input type where their goUpper 
+        storage attribute is true.";
+    STRING warning_impact = "Returns Alert_App, App_Service, and Service Manager edges related 
+        to a warning vertex";
     
-    The queries do not need to be run in a specific order.
-    */
-
-    PRINT "README worked!"; 
+    PRINT graph_description, query_order_query_name;
 }
