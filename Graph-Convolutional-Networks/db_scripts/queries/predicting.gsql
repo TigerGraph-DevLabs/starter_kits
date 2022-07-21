@@ -55,7 +55,7 @@ CREATE QUERY predicting() FOR GRAPH CitationGraph SYNTAX V2 {
 	        ACCUM t.@z_0 += product_ArrayAccum_const(s.@zeta_0,e.weight)
 	        POST-ACCUM
 	          s.@z_0 = ReLU_ArrayAccum(s.@z_0),
-  // hidden layer0 -> hidden layer1 */
+  	// hidden layer0 -> hidden layer1 */
 	          s.@zeta_1 += product_Matrix_Vector(@@W_1, s.@z_0)
 	          ;
 	          
