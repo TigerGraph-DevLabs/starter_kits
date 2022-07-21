@@ -1,8 +1,17 @@
-CREATE QUERY split_data() FOR GRAPH Recommender SYNTAX V2 {
-  // This query split rating data into validation set and training set. 
-	// The fraction of testing data is set to be 30%. (i.e. 30% of the rating data will be used for model validation
-	// and the rest 70% will be used for model training).
-	// This query also output the size of total data set, the validation data set and the training data set.
+CREATE QUERY split_data() FOR GRAPH Recommender SYNTAX V2 {	
+/*
+	Splits rating data into validation set and training set with 30% data
+	for testing. 
+	
+	No inputs
+  
+   	Starting from all USER vertices:
+   	(1) Select the validation data and training data
+   	(2) Returns the size of the total data set, validation data set, and 
+	training data set
+	
+*/
+
 	SumAccum<INT> @@cnt_total;
 	SumAccum<INT> @@cnt_validation;
 	SumAccum<INT> @@cnt_training;
