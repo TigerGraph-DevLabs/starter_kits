@@ -35,9 +35,9 @@ CREATE QUERY app_impact(vertex<Application> a, float decay, int k) FOR GRAPH Sto
     result = result UNION start;
   end;
   
-  Result = SELECT s from result:s
+  final = SELECT s from result:s
            ORDER BY s.@impact_score DESC
            LIMIT k;
   
-  print Result;
+  print final;
 }
