@@ -1,21 +1,26 @@
-CREATE QUERY README(/* Parameters here */) FOR GRAPH CitationGraph SYNTAX V2 { 
-  /* 
-The recommendation system can predict the movie ratings based on the latent factor (model-based) method.
-To train the latent factor model, run the queries below in sequence 
-The graph convolutional network (GCN) is applied for node classification.
-Specifically in this starter kit, it is used to prediction the class of the papers in a citation network
-The hyperparameters in the GCN model is suggested in Thomas N. Kipf and Max Welling, ICLR (2017).
-To train the GCN, the order of the queries below must be followed to obtain the useful prediction.
+CREATE QUERY README(/* Parameters here */) FOR GRAPH CitationGraph SYNTAX V2 {   
 
-1. initialization
-2. weight_initialization
-3. training
-4. predicting
-
-To re-train model using different training data split,
-users can modify the initialization query before repeat the steps above.
-The order of the queries need to be followed to ensure the correctness of the result. 
-  */ 
+STRING graph_description = "The recommendation system can predict the movie ratings based on the latent 
+ 	factor (model-based) method. To train the latent factor model, run the queries below in sequence 
+	The graph convolutional network (GCN) is applied for node classification.
+	Specifically in this starter kit, it is used to prediction the class of the papers in a citation 
+	network The hyperparameters in the GCN model is suggested in Thomas N. Kipf and Max Welling, ICLR (2017).
+	To train the GCN, the order of the queries below must be followed to obtain the useful prediction.";
 	
-  PRINT "README worked!"; 
+STRING query_order = "1. initialization, 2. weight_initialization, 3. training, 4. predicting"; 
+STRING order_note = "To re-train model using different training data split,
+	users can modify the initialization query before repeat the steps above.
+	The order of the queries need to be followed to ensure the correctness of the result.";
+
+STRING initialization = "Initializes weights on edges and attributes before splitting vertices into 
+   training, validation, and testing sets.";
+STRING weight_initialization = "Initializes the weights for the neural network.";
+STRING training = "Trains the graph convolutional neural network on the training dataset
+  	and evaluates the loss on the validation data and the prediction accuracy on the 
+	testing data.";
+STRING predicting = "Predicts the class of the papers in a citation network and 
+	return accuracies.";
+
+PRINT graph_description, query_order, order_note, initialization, weight_initialization, training, predicting;
+
 }
