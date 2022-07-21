@@ -1,0 +1,7 @@
+CREATE QUERY README() FOR GRAPH MyGraph {
+    PRINT "Healthcare - Referral networks, Hub (PageRank), & Community Detection";
+    PRINT "Investigating healthcare referral networks";
+
+    PRINT "The queries tg_louvain.gsql and infer_all_referrals.gsql MUST be";
+    PRINT "run in that order. tg_page_rank.gsql must also be run.";
+}

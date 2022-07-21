@@ -1,0 +1,16 @@
+CREATE QUERY infer_all_referrals() FOR GRAPH MyGraph { 
+/*
+    Create referral edges from any Prescriber to other Providers when they 
+    treat the same Patient in sequence
+
+    Starting with the Prescriber vertices,
+    (1) Run infer_referrals 
+    (2) Print the Prescriber vertices
+*/
+
+    all_prescribers = SELECT s 
+        FROM Prescriber:s 
+        ACCUM infer_referrals(s); // run infer_referrals query
+
+    PRINT all_prescribers;
+}

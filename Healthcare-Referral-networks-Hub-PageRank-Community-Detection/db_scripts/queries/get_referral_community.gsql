@@ -1,0 +1,31 @@
+CREATE QUERY get_referral_community(VERTEX<Prescriber> input_prescriber) 
+  FOR GRAPH MyGraph {
+/*
+    Get the Prescribers in the same referral community as that of a 
+    given Prescriber
+
+    Sample inputs:
+    input_prescriber: pre6 | pre30 | pre13
+
+    Starting with the Prescriber vertices,
+    (1) Find all vertices with the same community ID as the input_prescriber
+    (2) Print the Prescriber vertices in the community and edges
+*/
+
+    ListAccum<EDGE> @@edge_list;
+    SumAccum<INT> @@cid;
+
+    start = {input_prescriber};
+    start = SELECT s 
+        FROM start:s 
+        POST-ACCUM @@cid += s.communityId;
+
+    start = {Prescriber.*};
+
+    start = SELECT s 
+        FROM start:s-(referral>:e)-:t 
+        WHERE s.communityId == @@cid AND s.communityId == t.communityId
+        ACCUM @@edge_list += e;
+
+    PRINT start, @@edge_list;
+}

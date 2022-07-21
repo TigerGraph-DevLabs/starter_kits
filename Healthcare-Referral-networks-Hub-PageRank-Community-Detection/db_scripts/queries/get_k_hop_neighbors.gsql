@@ -1,16 +1,32 @@
-CREATE OR REPLACE QUERY get_k_hop_neighbor(int k, vertex input) FOR GRAPH MyGraph { 
-	
-	OrAccum<BOOL> @visited;
-	ListAccum<EDGE> @@edgeList;
-	
-  start = {input};
-	
-	WHILE start.size() > 0 limit k DO
-	  start = SELECT t from start-(:e)-:t
-	          WHERE t.@visited == false
-	          ACCUM @@edgeList += e
-	          POST-ACCUM t.@visited = true;
-	END;
-	
-	print @@edgeList;
+CREATE QUERY get_k_hop_neighbors(INT k, VERTEX input) FOR GRAPH MyGraph {
+/*
+    Get all the vertices within k hops of a source vertex
+
+    Sample inputs:
+    k: any number > 0
+    input: (Claim, 9921) | (SubSpecialty, Cardiology) | (Prescriber, pre78)
+
+    Starting with the "input",
+    (1) Traverse to all the vertices connected which was not visited
+    (2) Accumulate the vertices and edges
+    (3) Mark the vertices as visited
+    (4) Repeat the traversal k times
+*/
+
+    OrAccum<BOOL> @visited;
+    ListAccum<VERTEX> @@vertex_list;
+    ListAccum<EDGE> @@edge_list;
+
+    start = {input};
+
+    WHILE start.size() > 0 LIMIT k DO /* stops either when there are no
+      vertices or when reaching k */
+        start = SELECT t 
+            FROM start-(:e)-:t // visit all connected vertices
+            WHERE t.@visited == FALSE // vertex must be new
+            ACCUM @@vertex_list += t, @@edge_list += e // add to global lists
+            POST-ACCUM t.@visited = TRUE; // mark vertices visited
+    END;
+
+    PRINT @@vertex_list, @@edge_list;
 }
