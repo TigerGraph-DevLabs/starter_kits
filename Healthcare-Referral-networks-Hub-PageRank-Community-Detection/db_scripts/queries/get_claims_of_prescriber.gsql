@@ -1,0 +1,23 @@
+CREATE QUERY get_claims_of_prescriber(VERTEX<Prescriber> input_prescriber) FOR GRAPH MyGraph { 
+/*
+    Get the Claims of a given Prescriber
+
+    Sample inputs:
+    input_prescriber: pre6 | pre30 | pre13
+
+    Starting from an "input_prescriber",
+    (1) Grab all the prescriber's claims
+    Prescriber -(<submitted_by)- Claim
+    (2) Print the claims and submitted_by edges
+*/
+
+    ListAccum<EDGE> @@submitted_by_list;
+
+    start = {input_prescriber};
+
+    claims = SELECT t // select claims connected to the input prescriber
+        FROM start:s-(<submitted_by:e)-:t
+        ACCUM @@submitted_by_list += e;
+
+    PRINT claims, @@submitted_by_list;
+}

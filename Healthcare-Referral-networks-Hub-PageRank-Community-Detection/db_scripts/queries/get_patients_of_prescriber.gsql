@@ -1,0 +1,29 @@
+CREATE QUERY get_patients_of_prescriber(VERTEX<Prescriber> input_prescriber) 
+  FOR GRAPH MyGraph { 
+/*
+    Get the Patients of a given Prescriber
+
+    Sample inputs:
+    input_prescriber: pre6 | pre30 | pre13
+
+    Starting with the "input_prescriber",
+    (1) Find all the connected Claim vertices
+    (2) Find all the connected Patient vertices
+    (3) Print the Claim vertices and all the edges traversed
+    Prescriber -(<submitted_by)- Claim -(associated>)- Patient
+*/
+
+    ListAccum<EDGE> @@edge_list;
+
+    start = {input_prescriber};
+
+    claims = SELECT t  // select connected claims
+        FROM start:s-(<submitted_by:e)-:t
+        ACCUM @@edge_list += e;
+
+    patients = SELECT t // select connected patients
+        FROM claims:s-(associated>:e)-:t
+        ACCUM @@edge_list += e;
+
+    PRINT patients, @@edge_list;
+}

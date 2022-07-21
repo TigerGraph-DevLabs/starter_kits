@@ -1,0 +1,50 @@
+CREATE QUERY infer_referrals(VERTEX<Prescriber> input_prescriber) 
+  FOR GRAPH MyGraph { 
+/*
+    Create referral edges from a given Prescriber to other Providers when 
+    they treat the same Patient in sequence
+
+    Sample inputs:
+    input_prescriber: pre6 | pre30 | pre13
+
+    Starting with an "input_prescriber",
+    (1) Find all the connected Claim vertices and mark them as visited
+    (2) Find all the connected Patient vertices to the Claim vertices
+    (3) Find all the connected Claim vertices that are have not been visited
+      and the claims has been filled at most 30 days before the input 
+      prescriber's claim
+    Prescriber -(<submitted_by)- Claim -(associated>)- Patient
+      -(<associated)- Claim
+    (4) Insert referral edge values
+*/
+
+    OrAccum<BOOL> @visited, @is_referred_claim;	
+    ListAccum<DATETIME> @date_list;
+
+    start = {input_prescriber};
+
+    claims = SELECT t // get connected claims
+        FROM start:s-(<submitted_by:e)-:t
+        POST-ACCUM t.@visited = TRUE; // mark connected claims as visited
+
+    patients = SELECT t // get connected patients
+        FROM claims:s-(associated>:e)-:t
+        ACCUM t.@date_list += s.rx_fill_date; // flow dates to patients
+
+    referred_claims = SELECT t 
+        FROM patients:s-(<associated:e)-:t
+        WHERE t.@visited == FALSE // get connected claims not visited
+        ACCUM FOREACH dt IN s.@date_list DO
+            CASE WHEN datetime_diff(dt, t.rx_fill_date) 
+              BETWEEN 0 AND 2592000 THEN // if the date is at most a month before
+                t.@is_referred_claim = TRUE // set referred to true
+            END
+        END
+        HAVING t.@is_referred_claim == TRUE; // only include referred claims
+
+    referred_prescribers = SELECT t // get prescribers connected to the referred claims
+        FROM referred_claims-(submitted_by>:e)-:t
+        POST-ACCUM INSERT INTO referral VALUES(input_prescriber, t, 1); /* add
+          a referral edge between the prescribers and the input prescriber */
+    PRINT start;
+}
