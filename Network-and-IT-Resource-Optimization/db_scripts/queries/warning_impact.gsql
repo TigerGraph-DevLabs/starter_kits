@@ -4,7 +4,7 @@ CREATE QUERY warning_impact(vertex<Warning> inputWarn) FOR GRAPH Storage SYNTAX 
     to a warning vertex. 
 
     Sample inputs:
-    inputWarn:
+    inputWarn: 2000821
 
     Starting from an "inputWarn",
     (1) Select all applications connected to the warning and add to 
