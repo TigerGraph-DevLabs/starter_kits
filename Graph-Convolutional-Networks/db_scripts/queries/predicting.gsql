@@ -1,7 +1,7 @@
 CREATE QUERY predicting() FOR GRAPH CitationGraph SYNTAX V2 { 
 
 /*
-	Predict the class of the papers in a citation network and 
+	Predicts the class of the papers in a citation network and 
 	return accuracies. 
 	
 	No inputs
