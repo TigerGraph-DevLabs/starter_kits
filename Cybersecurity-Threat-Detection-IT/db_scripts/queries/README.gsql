@@ -1,0 +1,21 @@
+CREATE QUERY README() FOR GRAPH MyGraph {
+    STRING graph_description = "Block cybersecurity threats by detecting interconnected events, devices and people";
+
+    STRING query_order = "No order.";
+
+    STRING alert_source_tracking = "Find IP addresses of all the user names " +
+      "that output to the corresponding  resource within input period of time " + 
+      "before the reading action";
+    STRING firewall_bypass_detection = "Get users who bypassed the firewall";
+    STRING flooding_detection = "Detects the addresses that flooded one " + 
+      "service with large number of requests";
+    STRING footprinting_detection = "Detects user id that calls many " +
+      "endpoints of a service in short period of time in order to find " + 
+      " its vulnerability";
+    STRING suspicious_IP_detection = "Extracts number of shortest paths " + 
+      "to banned IPs";
+
+    PRINT graph_description, query_order, alert_source_tracking, 
+      firewall_bypass_detection, flooding_detection, footprinting_detection, 
+      suspicious_IP_detection;
+}
