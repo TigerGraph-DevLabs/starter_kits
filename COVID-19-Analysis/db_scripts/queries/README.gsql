@@ -1,0 +1,26 @@
+CREATE QUERY README() FOR GRAPH MyGraph {
+    STRING graph_description = "Detect hubs of infection and track the " +
+      " movements of potential spreaders";
+
+    STRING query_order = "No order.";
+    
+    STRING age_distribution = "Returns the distribution of the number of " +
+      "recorded deceased patients per age year.";
+    STRING all_connection = "Grabbing all connections of a specified Patient";
+    STRING edge_crawl = "Performs an edge crawl of the graph";
+    STRING infection_subgraph = "Takes a single patient and finds all " +
+      "infections and potential infections. Potential infections are " +
+      "determined by who came into contact with this person (directly "+
+      " or indirectly) within the symptom onset to release date time frame.";
+    STRING list_patients_infected_by = "Who are patient patients infected " +
+      "by _____ patient?";
+    STRING most_direct_infections = "Which person infected the most people " +
+      "directly?";
+    STRING tg_pagerank = "TigerGraph PageRank Algorithm";
+    STRING use_map = "Grab a Unique Count of those Patients located in " + 
+      "South Korean Cities";
+    
+    PRINT graph_description, query_order, age_distribution, all_connection, 
+      edge_crawl, infection_subgraph, list_patients_infected_by, 
+      most_direct_infections, tg_pagerank, use_map;
+}
