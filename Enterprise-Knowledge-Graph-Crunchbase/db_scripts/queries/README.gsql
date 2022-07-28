@@ -1,0 +1,23 @@
+CREATE QUERY README() FOR GRAPH CrunchBasePre_2013 {
+    STRING graph_description = "Knowledge Graph example featuring " + 
+      "Crunchbase data with startups, founders and companies";
+    
+    STRING query_order = "No order";
+
+    STRING investor_successful_exits = "Find a given investor's successful " + 
+      "investment exits (IPO, acquisition) within a given number of years.";
+    STRING key_role_discovery = "Given a company name `company_name`, find " + 
+      "the subgraph of parent companies and persons in key roles (CEO, " +
+      "founder, board director, executive, etc.) within k hops.";
+    STRING top_startups_based_on_board = "Rank startups based on the number " +
+      "of times that a current board member working for a 'top' investment " +
+      "firm (financialORG) was also a board member of a previous startup " + 
+      "that had a successful exit.";
+    STRING top_startups_based_on_leader = "Find the most promising startups " +
+      "led by successful founders, filtered by funding round cutoff and " + 
+      "business sector.";
+
+    PRINT graph_description, query_order, investor_successful_exits, 
+      key_role_discovery, top_startups_based_on_board, 
+      top_startups_based_on_leader;
+}

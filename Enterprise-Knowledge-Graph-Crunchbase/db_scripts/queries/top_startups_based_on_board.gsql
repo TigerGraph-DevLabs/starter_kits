@@ -6,35 +6,23 @@ CREATE QUERY top_startups_based_on_board(INT k_orgs=10, INT num_persons=2,
     working for a 'top' investment firm (financialORG) was also a board member
     of a previous startup that had a successful exit.
 
-    k_orgs = number of top financialORGs to include
-    num_persons = number of most successful board members to include
-    max_funding_round = string from the ordered list:
-      ["angel","seed","a","b","c","d","e","f","g"]
-
     Sample Inputs:
-       past_n_years = #, k_orgs = # top financial 
-       organizations, num_persons = # top people.
-    k_orgs: 30,  num_persons: 2,  cutoff_round: b,  past_n_years: 15;
-    k_orgs: 8,   num_persons: 1,  cutoff_round: a， past_n_years: 15;
-    k_orgs: 10,  num_persons: 3,  cutoff_round: d,  past_n_years: 10;
-    k_orgs: 20,  num_persons: 1,  cutoff_round: b， past_n_years: 20;
-    
-    Traversal Patterns:
-      company > company|IPO
-      funds < financialORG > person > company > funding_rounds
+    k_orgs: 8 | 10 | 20 | 30
+    num_persons: 1 | 2 | 3
+    max_funding_round: must be a string from 
+      ["angel","seed","a","b","c","d","e","f","g"]
       
-    Steps:
-    1. Tag each company with its IPO time or acquisition time
-    2. Rank financial organizations who raised the most money in past N years
-    3. Find people who work for a top k financial organization (2.
-    4. Rank top persons (3) by the number of times they were on the board
+    Starting with all company verices
+    (1) Tag each company with its IPO time or acquisition time
+    (2) Rank financial organizations who raised the most money in past N years
+    (3) Find people who work for a top k financial organization (2.
+    (4) Rank top persons (3) by the number of times they were on the board
     of a startup before its successful exit
-    5. Find pre-exit companies that have a top board member (4)
-    6. Filter top startups (5) by the funding round cutoff
+    (5) Find pre-exit companies that have a top board member (4)
+    (6) Filter top startups (5) by the funding round cutoff
     
     Data is from Crunchbase 2013 Snapshot under the
     Creative Commons Attribution License [CC-BY].
-    The starter kit dataset was reduced on Nov. 20th, 2020.
 */
     ListAccum<STRING> @@code_list;
     SetAccum<STRING> @@allowed_funding_rounds;

@@ -1,30 +1,22 @@
 CREATE QUERY investor_successful_exits(STRING investor_name="Accel Partners",
     STRING investor_type="financialORG", INT years=3)
     FOR GRAPH CrunchBasePre_2013 SYNTAX V2 {
-  /*
-    Data is from Crunchbase 2013 Snapshot under the
-    Creative Commons Attribution License [CC-BY].
-    The starter kit dataset was reduced on Nov. 20th, 2020.
-
+/*
     Find a given investor's successful investment exits (IPO, acquisition) 
     within a given number of years. If the number of years is 4, we include
     the successful exits happening within 4 years after their investments.
 
-    investor_type should be one of {"company", "person", "financialORG"}
-  
-    Steps:
-      (1) Find the funding rounds which the investor participated in.
-      (2) Find the companies funded by the rounds in step(1).
-      (3) Find the exit info of companies discovered in step(2).
-
-    Traversal pattern:
-      company/fiancialORG/person -> funding_rounds -> company -> IPO/acquire
-
     Sample inputs:
-    1.  investor_name: General Electric ; investor_type: company; years: 2
-    2.  investor_name: Accel Partners; investor_type: financialORG; years: 5
-    3.  investor_name: Ted Leonsis ; investor_type: person; years: 3
-  */
+    investor_name: General Electric | Accel Partners | Ted Leonsis
+    investor_type: must be one of {"company", "person", "financialORG"}
+    years: 2 | 3 | 5
+
+    Starting all of the vertices of the investor_type,
+    (1) Find the funding rounds which the investor participated in.
+    (2) Find the companies funded by the rounds in step(1).
+    (3) Find the exit info of companies discovered in step(2).
+    ompany/fiancialORG/person -> funding_rounds -> company -> IPO/acquire
+*/
   
     SetAccum<VERTEX> @parent_vertex_set;
     SetAccum<EDGE> @parent_edge_set;
@@ -51,11 +43,9 @@ CREATE QUERY investor_successful_exits(STRING investor_name="Accel Partners",
 
     // 1. Find funding rounds that the investor has participated in
     Funding_rounds = SELECT tgt
-        FROM investor :s - ((investment_from_company | investment_from_person | 
-            investment_from_financialORG) :e) - funding_rounds :tgt
-        ACCUM
-            tgt.@parent_vertex_set += s,   
-            tgt.@parent_edge_set += e;
+        FROM investor :s - ((investment_from_company | investment_from_person |
+          investment_from_financialORG) :e) - funding_rounds :tgt
+        ACCUM tgt.@parent_vertex_set += s, tgt.@parent_edge_set += e;
 
     // 2. Get companies invested in in the funding rounds from step(1)
     invested_companies = SELECT tgt
@@ -89,10 +79,9 @@ CREATE QUERY investor_successful_exits(STRING investor_name="Accel Partners",
     PRINT children.size() as Num_Successful_Exits;
     WHILE(children.size() > 0) DO
         start = SELECT s
-                FROM children :s
-                ACCUM
-                    @@parents += s.@parent_vertex_set,
-                    @@result_edge_set += s.@parent_edge_set;
+            FROM children :s
+            ACCUM @@parents += s.@parent_vertex_set,
+              @@result_edge_set += s.@parent_edge_set;
 
         @@result_vertex_set += @@parents;
         children = {@@parents};
@@ -100,9 +89,7 @@ CREATE QUERY investor_successful_exits(STRING investor_name="Accel Partners",
     END;
 
     // Output the results
-    results = {@@result_vertex_set}; // convert so to output more that just id
-    //PRINT results.size() AS num_vertices;
-    //PRINT @@result_edge_set.size() AS num_edges;
+    results = {@@result_vertex_set}; // convert so the output more that just id
     PRINT investor;    
     PRINT results;
     PRINT @@result_edge_set;
