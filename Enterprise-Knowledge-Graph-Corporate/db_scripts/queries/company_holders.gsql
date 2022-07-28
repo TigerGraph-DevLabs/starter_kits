@@ -1,59 +1,61 @@
-CREATE QUERY company_holders(vertex<Company> company, uint step) 
-  FOR GRAPH EnterpriseGraph syntax v1 {
-  /**
-   * company_holders query finds all key investors of a company within several steps.
-	 * --- Dataset has been shrunk on Nov.20th,2020 ---
-   * Some interesting input parameters you can try:
-   * 1. company: Hospice Mocha Frame, step: 5
-	 * 2. company: Psychoanalyst Purse Prior, step: 4
-	 * 3. company: Hospice Loyalty Decongestant, step: 2
-	 * 4. company: Discipline Base Perfume, step 1
-	 * 5. company: Discipline Base Perfume, step 2
-	 * 6. company: Discipline Base Perfume, step 3
-	 * 7. company: Discipline Base Perfume, step 4
-   */
+CREATE QUERY company_holders(VERTEX<Company> company, UINT step) 
+  FOR GRAPH EnterpriseGraph SYNTAX v1 {
+/*
+    Find all key investors of a company within several steps.
 
-	// @visited is used to mark visited vertices
-  OrAccum @visited = false;
-	// @@edge_set is used to hold all touched edges
-  SetAccum<edge> @@edge_set;
+    Sample inputs:
+    company: Hospice Mocha Frame | Hospice Loyalty Decongestant | 
+      Psychoanalyst Purse Prior | Discipline Base Perfume
+    step: 1 | 2 | 3 | 4 | 5
 
-  int loop_step;
+    Starting with the input company,
+    (1) Find the connected people who are holders of the company
+    (2) Merge the results with the vertex_results, which starts as
+      the input company
+    (3) Repeat for step steps
+*/
 
-  // limit the maximum traverse steps
-  IF (step > 8) THEN
-    loop_step = 8;
-  ELSE
-    loop_step = step;
-  END;
+    // @visited is used to mark visited vertices
+    OrAccum @visited = FALSE;
+    // @@edge_set is used to hold all touched edges
+    SetAccum<EDGE> @@edge_set;
 
-  // Start from the input company
-  start (any) = { company };
+    INT loop_step;
 
-	// vertex_result contains all vertices we touched during traversal
-  vertex_result = start;
+    // limit the maximum traverse steps
+    IF (step > 8) THEN
+      loop_step = 8;
+    ELSE
+      loop_step = step;
+    END;
 
-	// Mark input company as visited
-  start =  SELECT s
-              FROM start:s
-              ACCUM s.@visited = true;
+    // Start from the input company
+    start (ANY) = { company };
 
-	// Traverse multiple steps
-  WHILE (true) LIMIT loop_step DO
-		// Find the investors (either people or companies) that is a key investor (control_type == "holding")
-    start =  SELECT tgt
-                FROM start
-                     -((PersonInvestCompany | CompanyInvestCompany): e)-
-                     (Person | Company): tgt
-                WHERE (e.control_type == "holding") AND tgt.@visited == FALSE
-                ACCUM @@edge_set += e
-                POST-ACCUM tgt.@visited = TRUE
-                ;
-		// Merge touched vertices into the result
-    vertex_result = vertex_result union start;
-  END;
+    // vertex_result contains all vertices we touched during traversal
+    vertex_result = start;
 
-	// Print result as a graph
-  PRINT vertex_result;
-  PRINT @@edge_set;
+    // Mark input company as visited
+    start =  SELECT s
+        FROM start:s
+        ACCUM s.@visited = TRUE;
+
+    // Traverse multiple steps
+    WHILE (true) LIMIT loop_step DO
+        /* Find the investors (either people or companies) that is a key
+          investor (control_type == "holding")*/
+        start =  SELECT tgt
+            FROM start
+                -((PersonInvestCompany | CompanyInvestCompany): e)-
+                (Person | Company): tgt
+            WHERE (e.control_type == "holding") AND tgt.@visited == FALSE
+            ACCUM @@edge_set += e
+            POST-ACCUM tgt.@visited = TRUE;
+        // Merge touched vertices into the result
+        vertex_result = vertex_result UNION start;
+    END;
+
+    // Print result as a graph
+    PRINT vertex_result;
+    PRINT @@edge_set;
 }
