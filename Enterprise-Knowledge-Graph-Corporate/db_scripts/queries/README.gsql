@@ -1,0 +1,14 @@
+CREATE QUERY README() FOR GRAPH EnterpriseGraph {
+    STRING graph_description = "Analysis of corporate data including " + 
+      "investors and key stakeholders";
+    STRING query_order = "No order";
+    STRING company_holders = "Find all key investors of a company " +
+      " within several steps.";
+    STRING key_relationship = "Find all key investors or leaders (CEO, " + 
+      "VP, Director) of a company within several steps";
+    STRING people_with_key_positions_in_at_least_two_companies = "Find all " + 
+      " the people who are a CEO, Director or Vice President in at least " +
+      " two different companies";
+    PRINT graph_description, query_order, company_holders, key_relationship, 
+      people_with_key_positions_in_at_least_two_companies;
+}
