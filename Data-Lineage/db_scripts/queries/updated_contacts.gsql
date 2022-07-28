@@ -1,11 +1,15 @@
 CREATE QUERY updated_contacts() FOR GRAPH MyGraph { 
-	/*
-	 * Finds all the Contacts that have been updated since creation.
-	 */
-  	start = {Contact.*};
+/*
+	Find all the Contacts that have been updated since creation.
+
+	Starting with all Contact vertices,
+	(1) Print only the contacts with Updated as true
+*/
+
+  	start = {Contact.*}; // start with all contacts
 	
-	updated = SELECT s from start:s
-	          where s.Updated == true;
+	updated = SELECT s FROM start:s
+	          WHERE s.Updated == TRUE; // checks if attribute is true
 	
-	print updated;
+	PRINT updated; // print result
 }

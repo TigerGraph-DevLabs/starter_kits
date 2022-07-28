@@ -1,33 +1,40 @@
-CREATE QUERY cust_journey_subgraph(vertex<Contact> customer, 
-  vertex<Opportunity> opportunity) FOR GRAPH MyGraph { 
+CREATE QUERY cust_journey_subgraph(VERTEX<Contact> customer) 
+  FOR GRAPH MyGraph {
 /*
-  Sample input:
+    Returns a subgraph (edge and vertex lists) of a customer journey, including
+    the customer's connected Account, Campaign, Opportunity, and 
+    CampaignMemeber vertices
+
+    Sample inputs:
     customer: Sam-Eisenberg
-    opportunity: 0063600000gEoe0AAC
+
+    Starting with a customer,
+    (1) Accumulate connected Account, Opportunity, CampaignMember, and Campaign
+      vertices and their connected edges
+    (2) Display the subgraph
 */
-  SetAccum<edge> @@display_set;
-  SetAccum<vertex> @@vertex_set;
 
-  cust = { customer };
-    
-  acct = select t from cust:c -(belongs_to:e)-> Account:t
-         accum @@display_set += e, @@vertex_set += t;
-  
-    opp = select t from cust -(Has_Role:e)-> Opportunity:t 
-        accum @@display_set += e, @@vertex_set += t;
-  
-  campaign_members =
-          select t
-          from cust -(is_connected_to:e)-> CampaignMember:t
-          accum @@vertex_set += cust, @@vertex_set += t, @@display_set += e;
-  
-  campaigns = select t from campaign_members -(is_part_of:e)-> Campaign:t
-              accum @@vertex_set += t, @@display_set += e;
-  
-  verts = @@vertex_set;
-  
-  print verts;
-  //print@@vertex_set;
+  SetAccum<EDGE> @@display_set; // edge set
+  SetAccum<VERTEX> @@vertex_set; // vertex set
 
-  print @@display_set;
+  cust = { customer }; // start customer
+
+  acct = SELECT t 
+      FROM cust:c -(belongs_to:e)-> Account:t // accum account vertices
+      ACCUM @@display_set += e, @@vertex_set += t;
+
+  opp = SELECT t 
+      FROM cust -(Has_Role:e)-> Opportunity:t // accum opportunity vertices
+      ACCUM @@display_set += e, @@vertex_set += t; 
+
+  campaign_members = SELECT t
+      FROM cust -(is_connected_to:e)-> CampaignMember:t // accum members
+      ACCUM @@vertex_set += cust, @@vertex_set += t, @@display_set += e;
+
+  campaigns = SELECT t 
+      FROM campaign_members -(is_part_of:e)-> Campaign:t // accum campaigns
+      ACCUM @@vertex_set += t, @@display_set += e;
+
+  PRINT @@vertex_set AS verts; // print values
+  PRINT @@display_set;
 }
