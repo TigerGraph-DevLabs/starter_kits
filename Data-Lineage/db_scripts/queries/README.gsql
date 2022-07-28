@@ -1,0 +1,20 @@
+CREATE QUERY README() FOR GRAPH MyGraph {
+    STRING graph_description = "Improve data governance with the ability to " +
+      "track data back to its source";
+
+    STRING query_order = "1. most_updated_contacts or contact_when.gsql";
+
+    STRING all_updates = "Given an input Contact, find all of their updates";
+    STRING contact_when = "Updates Contacts modified before a specific time";
+    STRING cust_journey_subgraph = "Returns a subgraph (edge and vertex " + 
+      "lists) of a customer journey, including the customer's connected " +
+      "Account, Campaign, Opportunity, and CampaignMemeber vertices";
+    STRING customer_journey = "Prints the customer jounery, including the " + 
+      "inputted customer's accounts and campaign members within a date range";
+    STRING most_updated_contacts = "Updates Contacts to most recent updates";
+    STRING updated_contacts = "Find all the Contacts that have been updated " +
+      "since creation";
+
+    PRINT graph_description, query_order, all_updates, contact_when, 
+      cust_journey_subgraph, customer_journey, most_updated_contacts, updated_contacts;
+}

@@ -1,68 +1,81 @@
-CREATE QUERY contact_when(vertex<Contact> contact, datetime time) FOR GRAPH MyGraph { 
-  /*
-  Sample input:
+CREATE QUERY contact_when(VERTEX<Contact> contact, DATETIME time) 
+  FOR GRAPH MyGraph {
+/*
+    Updates Contacts modified before a specific time
+
+    Sample input:
     contact: Chris-Xi
     datetime: 2019-06-05
-  */
-  
-  typedef tuple <dtime datetime, attribute string, source string> updates;
-  ListAccum<vertex> @@earliest_first;
-  HeapAccum<updates>(1,dtime desc) @email_update;
-  HeapAccum<updates>(1,dtime desc) @phone_update;
-  HeapAccum<updates>(1,dtime desc) @title_update;
 
-  Start = {contact};
-  
-  get_updates = SELECT t FROM Start:s-(wasUpdated:e)-ContactOnDate:t
-               where t.modifiedDate <= time and s.outdegree("wasUpdated") > 1
-               order by t.modifiedDate asc;
-  
-  print get_updates;
-  
-  updated_contacts = SELECT t FROM get_updates:s-(wasUpdated:e)-Contact:t
-                     accum 
-                          @@earliest_first += get_updates,
-                          if s.email != "" then
-                            t.@email_update += updates(s.modifiedDate,s.email,s.source)
-                          end,
-                          if s.phone != "" then
-                            t.@phone_update += updates(s.modifiedDate,s.phone,s.source)
-                          end,
-                          if s.title != "" then
-                            t.@title_update += updates(s.modifiedDate,s.title,s.source)
-                          end;
-  
-  updated_contacts2 = SELECT t from get_updates:s-(wasUpdated:e)-Contact:t
-                      post-accum
-                      if get_updates.size() > 0 then
-                      if t.@email_update.size() > 0 then
-                          t.LastModifiedDate = t.@email_update.top().dtime,
-                          t.LastModifiedByid = t.@email_update.top().source,
-                          t.Email = t.@email_update.top().attribute,
-                          t.Updated = true
-                      end,
-                      if t.@phone_update.size() > 0 then
-                        if t.@phone_update.top().dtime > t.@email_update.top().dtime then
-                          t.LastModifiedDate = t.@phone_update.top().dtime,
-                          t.LastModifiedByid = t.@phone_update.top().source,
-                          t.Phone = t.@phone_update.top().attribute,
-                          t.Updated = true
-                        else
-                          t.Phone = t.@phone_update.top().attribute,
-                          t.Updated = true 
-                        end
-                      end,
-                      if t.@title_update.size() > 0 then
-                        if t.@title_update.top().dtime > t.@email_update.top().dtime and t.@title_update.top().dtime > t.@phone_update.top().dtime then
-                          t.LastModifiedDate = t.@title_update.top().dtime,
-                          t.LastModifiedByid = t.@title_update.top().source,
-                          t.Title = t.@title_update.top().attribute,
-                          t.Updated = true
-                        else
-                          t.Title = t.@title_update.top().attribute,
-                          t.Updated = true 
-                        end 
-                      end
-                    end;
-  
+    Starting with an input contact,
+    (1) Get all connected ContactOnDate before the time and updated 
+      at least twice
+    (2) Add the information each contact has to the accumulators
+    (3) Update the Contact attributes to match when it was last updated
+*/
+    
+    TYPEDEF TUPLE <dtime DATETIME, attribute STRING, source STRING> Updates;
+    ListAccum<VERTEX> @@earliest_first;
+    HeapAccum<Updates>(1,dtime DESC) @email_update;
+    HeapAccum<Updates>(1,dtime DESC) @phone_update;
+    HeapAccum<Updates>(1,dtime DESC) @title_update;
+
+    start = {contact};
+    
+    get_updates = SELECT t 
+        FROM start:s-(wasUpdated:e)-ContactOnDate:t // get ContactOnDate
+        WHERE t.modifiedDate <= time AND s.outdegree("wasUpdated") > 1
+        ORDER BY t.modifiedDate ASC;
+    
+    PRINT get_updates;
+    
+    updated_contacts_accum = SELECT t 
+        FROM get_updates:s-(wasUpdated:e)-Contact:t
+        ACCUM @@earliest_first += get_updates, // Update accumulators
+            IF s.email != "" THEN
+              t.@email_update += Updates(s.modifiedDate,s.email,s.source)
+            END,
+            IF s.phone != "" THEN
+              t.@phone_update += Updates(s.modifiedDate,s.phone,s.source)
+            END,
+            IF s.title != "" THEN
+              t.@title_update += Updates(s.modifiedDate,s.title,s.source)
+            END;
+    
+    updated_contacts_attr = SELECT t 
+        FROM get_updates:s-(wasUpdated:e)-Contact:t
+        POST-ACCUM
+          IF get_updates.size() > 0 THEN
+              IF t.@email_update.size() > 0 THEN // Update Contact attributes
+                  t.LastModifiedDate = t.@email_update.top().dtime,
+                  t.LastModifiedByid = t.@email_update.top().source,
+                  t.Email = t.@email_update.top().attribute,
+                  t.Updated = TRUE
+              END,
+              IF t.@phone_update.size() > 0 THEN
+                  IF t.@phone_update.top().dtime > 
+                    t.@email_update.top().dtime THEN
+                      t.LastModifiedDate = t.@phone_update.top().dtime,
+                      t.LastModifiedByid = t.@phone_update.top().source,
+                      t.Phone = t.@phone_update.top().attribute,
+                      t.Updated = TRUE
+                  ELSE
+                      t.Phone = t.@phone_update.top().attribute,
+                      t.Updated = TRUE 
+                  END
+              END,
+              IF t.@title_update.size() > 0 THEN
+                  IF t.@title_update.top().dtime > t.@email_update.top().dtime
+                    AND t.@title_update.top().dtime > 
+                    t.@phone_update.top().dtime THEN
+                      t.LastModifiedDate = t.@title_update.top().dtime,
+                      t.LastModifiedByid = t.@title_update.top().source,
+                      t.Title = t.@title_update.top().attribute,
+                      t.Updated = TRUE
+                  ELSE
+                      t.Title = t.@title_update.top().attribute,
+                      t.Updated = TRUE 
+                  END 
+              END
+          END;
 }

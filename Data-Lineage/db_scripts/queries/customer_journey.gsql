@@ -1,27 +1,43 @@
-CREATE QUERY customer_journey(vertex<Contact> customer, set<string> campaign_types, 
-	datetime start_time, datetime end_time) FOR GRAPH MyGraph {
+CREATE QUERY customer_journey(VERTEX<Contact> customer, 
+  SET<STRING> campaign_types, DATETIME start_time, DATETIME end_time) 
+  FOR GRAPH MyGraph {
 /*
-  Sample input:
+	Prints the customer jounery, including the inputted customer's accounts
+	and campaign members within a date range
+
+	Sample inputs:
 	customer: Sam-Eisenberg
+	campaign_types: empty
 	start_time: 2018-06-01
 	end_time: 2018-10-01
+
+	Starting with an input customer,
+	(1) Print all connected accounts
+	(2) Find all the connected campaign members created within the time range
+	(3) If values are provided for campaign types, filter by campaigns types 
+	  in the set
+	(4) Print campaign
 */
 	
-	SumAccum<string> @cam_type, @cam_name, @cam_desc;
+	SumAccum<STRING> @cam_type, @cam_name, @cam_desc;
+
 	start = { customer };
+  	PRINT start;
 
-  	print start;
+	company = SELECT t FROM start -(belongs_to)-> Account:t;
+	PRINT company as Company;
 
-	Company = select t from start -(belongs_to)-> Account:t;
-	print Company;
-	campaign = select c
-	           from start-(is_connected_to)-> CampaignMember:c
-	           where c.CreatedDate >= start_time and c.CreatedDate <= end_time
-	           ;
-	campaign = select c from campaign:c -(is_part_of)-> Campaign:t
-	           where campaign_types.size() == 0 or t.Campaign_Type in campaign_types
-	           accum c.@cam_type = t.Campaign_Type,
+	campaign = SELECT c
+		FROM start-(is_connected_to)-> CampaignMember:c
+		WHERE c.CreatedDate >= start_time AND c.CreatedDate <= end_time;
+		// created within the creation date
+	
+	campaign = SELECT c FROM campaign:c -(is_part_of)-> Campaign:t
+	           WHERE campaign_types.size() == 0 OR 
+			     t.Campaign_Type IN campaign_types
+	           ACCUM c.@cam_type = t.Campaign_Type, // accum values
 	                 c.@cam_name = t.Name,
 	                 c.@cam_desc = t.Description;
-	print campaign as Campaign;
+	
+	PRINT campaign AS Campaign; // print results
 }
