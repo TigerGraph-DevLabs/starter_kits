@@ -1,36 +1,31 @@
 CREATE QUERY top_startups_based_on_leader(STRING max_funding_round = "c",
     INT return_size = 3, STRING sector = "software")
     FOR GRAPH CrunchBasePre_2013 SYNTAX V2 {
-    /*
-        Find the most promising startups led by successful founders, filtered by 
-        funding round cutoff and business sector.
-        Example: If return_size is 3, round cutoff is "c", and industry sector 
-        is "software", then return the top 3 startups that pass those filters, 
-        ranked by how many IPOs happened after their founders' contribution to 
-        their past companies.
-        
-        max_funding_round = string from the ordered list:
-              ["angel","seed","a","b","c","d","e","f","g"]
-        
-        Sample inputs:
-        1.  max_funding_round: c       return_size: 3     sector: software
-        2.  max_funding_round: angel   return_size: 5     sector: mobile
-        3.  max_funding_round: a       return_size: 2     sector: games_video
+/*
+    Find the most promising startups led by successful founders, filtered by 
+    funding round cutoff and business sector.
     
-        Steps:
-        (1) Find all companies that have IPOed or gotten Acquired.
-        (2) Find employees who contributed to the companies in step (1).
-        (3) Find startups whose founders worked for the companies in step (1).
-        (4) Select startups from step (3) based on the round cutoff and sector.
-        (5) Find companies whose founders have the most successful connections.
-    
-        Traversal Pattern:
-          funding_rounds -> company -> person -> company -> IPO/acquired
+    Sample inputs:
+    max_funding_round: string from the ordered list:
+      ["angel","seed","a","b","c","d","e","f","g"]
+    return_size: 2, 3, 5
+    sector: software, mobile, game_video
 
-        Data is from Crunchbase 2013 Snapshot under the
-           Creative Commons Attribution License [CC-BY].
-        The starter kit dataset was reduced on Nov. 20th, 2020.
-    */
+    Example: If return_size is 3, round cutoff is "c", and industry sector 
+    is "software", then return the top 3 startups that pass those filters, 
+    ranked by how many IPOs happened after their founders' contribution to 
+    their past companies.
+
+    Starting with all companies,
+    (1) Find all companies that have IPOed or gotten Acquired.
+    (2) Find employees who contributed to the companies in step (1).
+    (3) Find startups whose founders worked for the companies in step (1).
+    (4) Select startups from step (3) based on the round cutoff and sector.
+    (5) Find companies whose founders have the most successful connections.
+
+    Data is from Crunchbase 2013 Snapshot under the
+    Creative Commons Attribution License [CC-BY].
+*/
 
     // Declare a tuple to store a company and its IPO/acquired numbers
     TYPEDEF TUPLE<VERTEX<company> company, INT score> Company_Score;

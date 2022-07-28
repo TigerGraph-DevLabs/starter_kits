@@ -1,22 +1,20 @@
 CREATE QUERY key_role_discovery(STRING company_name="FriendFeed", INT k=5)
   FOR GRAPH CrunchBasePre_2013 SYNTAX V2 {
-    /*
-        Data is from Crunchbase 2013 Snapshot under the
-        Creative Commons Attribution License [CC-BY].
-        The starter kit dataset was reduced on Nov. 20th, 2020.
+/*
+    Given a company name `company_name`, find the subgraph of parent
+    companies and persons in key roles (CEO, founder, board director,
+    executive, etc.) within k hops.
 
-        Given a company name `company_name`, find the subgraph of parent
-        companies and persons in key roles (CEO, founder, board director,
-        executive, etc.) within k hops.
+    Sample Inputs:
+    company_name: LinkedIn | LuckyCal | FriendFeed
+    k: 2 | 5 | 8
 
-        Traversal pattern:
-            company -(repeat up to k times)-> company -> person
-    
-        Sample Inputs:
-        company_name: LinkedIn     k: 2;
-        company_name: LuckyCal,    k: 8;
-        company_name: FriendFeed,  k: 5;
-    */
+    Starting with an input company,
+    (1) Find connected people and company and add them to the accumulator
+    (2) Repeat k times
+    company -(repeat up to k times)-> company -> person
+*/
+
     OrAccum @visited;
     SetAccum<VERTEX> @@output_vertices;
     SetAccum<EDGE> @@output_edges;
@@ -33,17 +31,16 @@ CREATE QUERY key_role_discovery(STRING company_name="FriendFeed", INT k=5)
     WHILE TRUE LIMIT k DO
         linked_companies = SELECT tgt
             FROM linked_companies:s
-                - ((invested_by_company> | acquired_by> | work_for_company):e) 
-                - (company | person):tgt
+              - ((invested_by_company> | acquired_by> | work_for_company):e) 
+              - (company | person):tgt
             WHERE s.type == "company" AND tgt.@visited == FALSE AND
               (e.type == "work_for_company" AND
-                (e.title LIKE "%founder%" OR e.title LIKE "%Founder%" OR
-                 e.title LIKE "%CEO%" OR e.title LIKE "% ceo%" OR
-                 e.title LIKE "%CTO%" OR e.title LIKE "% cto%" OR
-                 ((e.title LIKE "%oard%irectors%" OR e.title LIKE "%xecutive%")
-                   AND datetime_diff(e.end_at, TNULL) == 0))
-                ) OR
-                 e.type != "work_for_company"
+              (e.title LIKE "%founder%" OR e.title LIKE "%Founder%" OR
+              e.title LIKE "%CEO%" OR e.title LIKE "% ceo%" OR
+              e.title LIKE "%CTO%" OR e.title LIKE "% cto%" OR
+              ((e.title LIKE "%oard%irectors%" OR e.title LIKE "%xecutive%")
+              AND datetime_diff(e.end_at, TNULL) == 0))) OR
+              e.type != "work_for_company"
             ACCUM @@output_vertices += tgt, @@output_edges += e
             POST-ACCUM tgt.@visited = TRUE;
     END;
