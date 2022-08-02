@@ -5,7 +5,7 @@ CREATE QUERY test(VERTEX<USER> user) FOR GRAPH Recommender SYNTAX V2 {
 	by the model
 	
 	Sample Input:
-	user:
+	user: 1 | 2
 	
 	Starting with a user vertex:
 	(1) Select movies with edges to the user
