@@ -1,4 +1,16 @@
 CREATE QUERY training(DOUBLE learning_rate = 0.001, DOUBLE regularization_factor = 0.00005, INT Iter=100) FOR GRAPH Recommender SYNTAX V2 {
+	/*
+	   Trains recommender model using the gradient descent algorithm. 
+
+	    No inputs
+	    
+	    Starting with all movies vertices and all user vertices:
+	    (1) Pass x and theta to local accum
+	    (2) Obtain the latent factor vectors using gradient descent algorithm
+	    (3) Outputs the root mean square error (RMSE) for every iteration
+	*/
+	
+	
 	//This query trains the recommender model using gradient descent algorithm 
 	//The number of features is set as 19. This number has to be the same as the num_latent_factors in the initialization query
 	//The query inputs are the learning rate, regularization_factor and the number of training iterations
