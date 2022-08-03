@@ -3,13 +3,24 @@ CREATE QUERY jaccard_nbor_reaction(VERTEX source, STRING etype
   SYNTAX v1 { 
   //example: ReportedCase=100640876
 /*
-Calculates the Jaccard Similarity between a given vertex and every other
-vertex. A simplified version of the generic purpose algorithm
-jacccard_nbor_ss in the GSQL Graph Data Science Library
-https://github.com/tigergraph/gsql-graph-algorithms
+    Calculates the Jaccard Similarity between a given vertex and every other
+    vertex. A simplified version of the generic purpose algorithm
+    jacccard_nbor_ss in the GSQL Graph Data Science Library
+    https://github.com/tigergraph/gsql-graph-algorithms
 
-Note: In versions 3.5 and earlier, the SAMPLE clause was only supported in Syntax V1, 
-so this query uses Syntax V1. The default Syntax V2 may be used in future versions that support SAMPLE.
+    Note: In versions 3.5 and earlier, the SAMPLE clause was only supported in Syntax V1, 
+    so this query uses Syntax V1. The default Syntax V2 may be used in future versions that support SAMPLE.
+
+    Sample inputs:
+    source: 
+    
+    Starting from the source vertex:
+    (1) Get the outdegree set size from the source
+    (2) Get neighbors of the source
+    (3) Select others (neighbors of neighbors) and calculate
+      Jaccard's Similarity
+    (4) Orders others by similarity to source
+
 */
 
     SumAccum<INT> @intersection_Size, @@set_size_A, @set_size_B;
