@@ -1,7 +1,21 @@
 CREATE QUERY shortest_ss_no_wt(VERTEX source, BOOL display) FOR GRAPH MyGraph SYNTAX V2 { 
- /* This query is Single-Source Shortest Path without weights on edges. It calculates the shortest distance from the given vertex source to all other connected vertices, and shows one shortest path between them.   
-The JSON version also show visualization of the network. 
-The attribute version only store the distance into attribute, not the path.
+ /*
+   Single-Source Shortest Path without weights on edges. Calculates the shortest distance 
+   from the given vertex source to all other connected vertices, and shows one shortest 
+   path between them. 
+   
+   The JSON version also show visualization of the network. 
+   The attribute version only store the distance into attribute, not the path.
+   
+   Sample Inputs:
+   source: airport = "Goroka Airport"
+   display: True | False
+   
+   Start from the source vertex:
+   (1) Initialize local accumulators
+   (2) Select connected vertices, calculates shortest distance, and gets shortest
+       path 
+   (3) Print results if display is True
 */
 
         MinAccum<int> @dis;
