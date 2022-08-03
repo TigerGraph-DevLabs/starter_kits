@@ -3,9 +3,20 @@ CREATE QUERY shortest_ss_pos_wt (VERTEX source, BOOL display) FOR GRAPH MyGraph 
    and increase the time outdegree
 */
 
-/* The Bellman-Ford algorithm for single-Source Shortest Path 
+/* 
+   The Bellman-Ford algorithm for single-Source Shortest Path 
    on directed/undirected graph with positive weight.
    It will not detect negative cycle in this algorithm. 
+   
+   Sample Inputs:
+   source: airport = "Goroka Airport"
+   display: True | False
+   
+   Start with the source vertex:
+   (1) Get connected vertices and update local accumulators
+   (2) Do V-1 iterations: Consider whether each edge lowers the best-known distance.
+   (3) Calculates shortest paths and displays results if display is True
+   
 */
         TYPEDEF TUPLE<FLOAT dist, VERTEX pred> pathTuple;    
         HeapAccum<pathTuple>(1, dist ASC) @minPath;
