@@ -1,7 +1,7 @@
 CREATE QUERY jaccard_nbor_reaction(VERTEX source, STRING etype
   ="hasReactions", INT top_k=100, INT sampSize=100) FOR GRAPH faers
   SYNTAX v1 { 
-  //example: ReportedCase=100640876
+
 /*
     Calculates the Jaccard Similarity between a given vertex and every other
     vertex. A simplified version of the generic purpose algorithm
