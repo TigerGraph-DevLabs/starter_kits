@@ -1,17 +1,27 @@
 CREATE QUERY README(/* Parameters here */) FOR GRAPH LowRankApproximation SYNTAX V2 { 
 /* 
-The LowRankApproximation Starter Kit factorize a loaded sparse matrix A into two low-rank matrices U and V such that the matrix product of U and the transpose of V can approximate the original sparse matrix A. The U and V are obtained by minimize the Frobenius norm (or the root mean squer error) of A - U*transpose(V) using gradient descent algorithm.
-To compute U and V, run the queries below in sequence 
-  1. initialization
-  2. factorization
-
-To compare the approximated matrix with the original matrix, run the queries below
-compare_approximation
-
-To print out the matrices U and V, run print_result
-
-The order of the queries need to be followed to ensure the correctness of the result.
+	The LowRankApproximation Starter Kit factorize a loaded sparse matrix A into 
+	two low-rank matrices U and V such that the matrix product of U and the transpose 
+	of V can approximate the original sparse matrix A. The U and V are obtained by
+	minimize the Frobenius norm (or the root mean squer error) of 
+	A - U*transpose(V) using gradient descent algorithm.
 */ 
-	
-  PRINT "README works!"; 
+ 
+STRING graph_name = "Low-Rank-Approximation-Machine-Learning";
+STRING graph_description = "Implements the low-rank approximation algorithm natively " +
+	"in-database to deliver personalized recommendations.";
+STRING query_order = "1. initialization, 2. factorization, 3. compare_approximation, 4. print_result";
+
+STRING initialization = "Initializes the row vectors for the matrix U and the matrix V " + 
+	"where elements are initialized by a normal distributed random number generator.";
+STRING factorization = "Factorizes the loaded sparse matrix into two low-rank matrices " +
+	"U and V using gradient descent algorithm."
+
+//To compare the approximated matrix with the original matrix
+STRING compare_approximation = "Outputs the element values of one row of the loaded matrix " +
+	"specified by the inputed row index together with the approximated element values.";
+STRING print_result = "Prints out two matrices U and V factorized from the loaded sparse matrix.";
+
+PRINT name, graph_description, query_order, initialization, factorization, compare_approximation, print_result;
+
 }
