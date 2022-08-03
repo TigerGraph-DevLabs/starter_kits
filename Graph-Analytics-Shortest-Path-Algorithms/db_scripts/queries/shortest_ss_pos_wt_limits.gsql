@@ -2,12 +2,15 @@ CREATE QUERY shortest_ss_pos_wt_limits (VERTEX source, BOOL display, INT maxHops
 
 /*  
 	The Bellman-Ford algorithm for single-Source Shortest Path 
-	on directed/undirected graph with positive weight.
+	on directed/undirected graph with positive weight with 
+	limited number of hops and distance.
 	It will not detect negative cycle in this algorithm. 
    
    	Sample Inputs:
 	source: airport = "Goroka Airport"
 	display: True | False
+	maxHops: 3
+	maxDest: 10
    
 	Start with the source vertex:
 	(1) Get connected vertices and update local accumulators
