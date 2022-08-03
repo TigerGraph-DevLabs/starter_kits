@@ -1,14 +1,14 @@
 CREATE QUERY README(/* Parameters here */) FOR GRAPH faers SYNTAX V2 {   
 
-STRING name = Healthcare-Graph-Drug-Interaction-FAERS";
-STRING graph_description = "Healthcare example focused on public (FAERS) and private data for pharmaceutical drugs";
+  STRING name = Healthcare-Graph-Drug-Interaction-FAERS";
+  STRING graph_description = "Healthcare example focused on public (FAERS) and private data for pharmaceutical drugs";
 
-STRING query_order = "No order"; 
+  STRING query_order = "No order"; 
 
-STRING jaccard_nbor_reaction = "Calculates the Jaccard Similarity between a given vertex and every other vertex.";
-STRING most_reported_drugs_for_company_v2 = "Returns most reported drugs given a company.";
-STRING top_side_effects_for_top_drugs = "Returns most mentioned drugs, the number of reported cases, and their side effects.";
+  STRING jaccard_nbor_reaction = "Calculates the Jaccard Similarity between a given vertex and every other vertex.";
+  STRING most_reported_drugs_for_company_v2 = "Returns most reported drugs given a company.";
+  STRING top_side_effects_for_top_drugs = "Returns most mentioned drugs, the number of reported cases, and their side effects.";
 
-PRINT name, graph_description, query_order, jaccard_nbor_reaction, most_reported_drugs_for_company_v2, top_side_effects_for_top_drugs;
+  PRINT name, graph_description, query_order, jaccard_nbor_reaction, most_reported_drugs_for_company_v2, top_side_effects_for_top_drugs;
 
 }
