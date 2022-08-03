@@ -1,4 +1,19 @@
 CREATE query feature_collection(vertex<phone> phoneId, int durationLimit = 600, int numOfCallLimit = 10) for graph sdmGraph SYNTAX V2 {
+  /*
+    Returns stable connections given phone id, number of calls, and duration limit. 
+    
+    Sample inputs:
+    phoneId: 1 | 2 
+    
+    Starting with a seed phoneID:
+    (1) Select phone ids with edges to the seed.
+    (2) Store stable connection edges and stable targets
+    (3) Update neighbor information among target group
+    (4) Count stable calls
+    (5) Return seed, target group, edges, and stable connection list
+     
+*/
+  
   TYPEDEF TUPLE <Edge e, int totalDuration, int numOfCall> CallInfo;
   SumAccum<int> @stableCount;
   GroupByAccum<vertex<phone> tid, ListAccum<CallInfo> callInfo> @NB_Info;
