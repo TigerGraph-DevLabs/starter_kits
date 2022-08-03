@@ -12,7 +12,7 @@ CREATE QUERY jaccard_nbor_reaction(VERTEX source, STRING etype
     so this query uses Syntax V1. The default Syntax V2 may be used in future versions that support SAMPLE.
 
     Sample inputs:
-    source: 
+    source: ReportedCase=100640876
     
     Starting from the source vertex:
     (1) Get the outdegree set size from the source
