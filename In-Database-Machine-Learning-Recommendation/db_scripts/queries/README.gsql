@@ -6,7 +6,7 @@ CREATE QUERY README(/* Parameters here */) FOR GRAPH Recommender SYNTAX V2 {
 	correctness of the result.
 */ 
 
-STRING graph_name = "In Database Machine Learning Recommendation";
+STRING name = "In Database Machine Learning Recommendation";
 STRING graph_description = "Provides content and products suggestions" +
 	"using an in-database machine learning recommendation system. " +
 	"The recommendation system can predict the movie ratings based " +
@@ -27,6 +27,6 @@ STRING recommend = "Outputs the top-10 movies recommended to a user";
 STRING cal_avg_rating = "Calculates the average rating across all movies.";
 
 
-PRINT graph_name, graph_description, query_train_order, query_test_order, splitData, normalization, initialization, training, test, recommend,cal_avg_rating;
+PRINT name, graph_description, query_train_order, query_test_order, splitData, normalization, initialization, training, test, recommend,cal_avg_rating;
 	
 }
