@@ -3,6 +3,15 @@ CREATE QUERY util_set_weights(
   DOUBLE last_name_wt=0.75, DOUBLE address_wt=0.5, DOUBLE device_wt=0.5)
   FOR GRAPH Entity_Resolution SYNTAX v2{
   
+  /*
+    Sets all weights 
+    
+    No inputs
+    
+    Sets weights from default parameters and stores in weight vertex
+  
+  */
+  
   MapAccum<STRING, FLOAT> @@wt_map;
   @@wt_map += ("User_IP" -> ip_wt);
   @@wt_map += ("User_Email" -> email_wt);
