@@ -1,0 +1,31 @@
+CREATE QUERY README() FOR GRAPH MyGraph { 
+	STRING graph_description = "Determine the entity in your network that " +
+	  "is most central to the others";
+
+	STRING query_order = "1. add_weights"; 
+
+	STRING add_weights = "Haversine formula to calculate the distances " + 
+	  "between airports by using their latitude and longitude coordinates. " +
+	  "The calculated distances are measured in miles and are added as edge " + 
+	  "weights.";
+	STRING bc_subquery = "The TigerGraph implementation is based on A " + 
+	  "Faster Algorithm for Betweenness Centrality";
+	STRING betweenness_cent = "Betweenness Centrality main query";
+	STRING cc_by_country = "Closeness Centrality main query filtered by " + 
+	  "country";
+	STRING cc_subquery = "Subquery returns closeness centrality for vertex " + 
+	  "source in graph with num_vert vertices ";
+	STRING cc = "Closeness Centrality main query";
+	STRING page_rank_by_country = "PageRank Algorithm";
+	STRING page_rank_pers = "Personalized PageRank Algorithm";
+	STRING page_rank = "PageRank Algorithm";
+	STRING shortest_ss_no_wt = "Shortest Path Algorithm without weights";
+	STRING shortest_ss_pos_wt_limits = "Shortest Path Algorithm with " + 
+	  "weights and limits";
+	STRING shortest_ss_pos_wt = "Shortest Path Algorithm with weights";
+
+	PRINT graph_description, query_order, add_weights, bc_subquery, 
+	  betweenness_cent, cc_by_country, cc_subquery, cc, page_rank_by_country, 
+	  page_rank_pers, page_rank, shortest_ss_no_wt, shortest_ss_pos_wt_limits, 
+	  shortest_ss_pos_wt;
+}
