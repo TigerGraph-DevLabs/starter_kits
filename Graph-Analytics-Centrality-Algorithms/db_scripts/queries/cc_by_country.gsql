@@ -1,5 +1,5 @@
 CREATE QUERY cc_by_country (BOOL display, INT output_limit, INT maxHops, STRING country) FOR GRAPH MyGraph SYNTAX V2 {
-# Closeness Centrality main query
+# Closeness Centrality main query filtered by country
 
         TYPEDEF TUPLE<VERTEX Vertex_ID, STRING name, FLOAT score> Vertex_Score;
         HeapAccum<Vertex_Score>(output_limit, score DESC) @@top_scores;
@@ -7,7 +7,6 @@ CREATE QUERY cc_by_country (BOOL display, INT output_limit, INT maxHops, STRING 
         SetAccum<EDGE> @@edge_set;                   # list of all edges, if display is needed
   
         INT num_vert;
-        #INT maxHops = 10;      # measure distance for vertices up to 10 hops away
   
         start = {Airport.*};
         IF country != "" THEN
