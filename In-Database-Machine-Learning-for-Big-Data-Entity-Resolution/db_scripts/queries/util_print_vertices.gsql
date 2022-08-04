@@ -1,5 +1,14 @@
 CREATE QUERY util_print_vertices (STRING v_type="Weights")
 FOR GRAPH Entity_Resolution SYNTAX v2 { 
+
+/*
+  Get all vertices of given type
+  
+  No inputs
+  
+  Selects all vertices of given type and prints the set
+
+*/
   
   Vertices = {v_type}; // Get all vertices of type v_typpe
   PRINT Vertices;
