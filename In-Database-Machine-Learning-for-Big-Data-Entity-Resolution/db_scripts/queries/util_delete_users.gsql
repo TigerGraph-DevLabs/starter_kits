@@ -1,4 +1,15 @@
 CREATE QUERY util_delete_users(bool are_you_sure=FALSE) FOR GRAPH Entity_Resolution SYNTAX V2 { 
+
+/*
+  Deletes all users
+  
+  No inputs
+  
+  If are_you_sure is True:
+  (1) Selects and deletes all Users
+  (2) Prints action taken
+  
+*/
   
   IF are_you_sure THEN
     All_users = {User.*};
