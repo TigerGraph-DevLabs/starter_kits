@@ -3,7 +3,7 @@ CREATE QUERY insert_referrals(VERTEX<Prescriber> input_prescriber)
 	
 	/*
 	
-	Inserts and returns number of referral insertions
+	Inserts and returns number of referral insertions from unvisited claims
 	
 	Sample input:
 	input_prescriber: pre38
