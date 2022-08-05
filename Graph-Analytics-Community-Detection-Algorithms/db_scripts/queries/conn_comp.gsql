@@ -4,9 +4,9 @@ CREATE QUERY conn_comp (STRING vertex_type, STRING edge_type, STRING rev_edge_ty
           Identifies the Connected Components (undirected edges)
           
           Sample inputs:
-          vertex_type:
-          edge_type:
-          rev_edge_type:
+          vertex_type: claim
+          edge_type: associated
+          rev_edge_type: reverse_associated
           
           Start from given vertex_type:
           (1) Initialize: Label each vertex with its own internal ID
