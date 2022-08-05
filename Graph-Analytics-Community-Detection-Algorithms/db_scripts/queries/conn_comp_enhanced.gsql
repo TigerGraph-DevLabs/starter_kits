@@ -1,6 +1,19 @@
 CREATE QUERY conn_comp_enhanced (SET<VERTEX> vertex_types, STRING vt2, 
         STRING edge_type, STRING rev_edge_type, INT output_level) FOR GRAPH MyGraph SYNTAX V2 {
-# This query identifies the Connected Components (undirected edges)
+/*
+	Identifies the Connected Components (undirected edges)
+	
+	Sample inputs:
+	vertex_type: claim
+	vt2: N/A
+        edge_type: associated
+        rev_edge_type: reverse_associated
+	output_level: 1 
+          
+        Start from given vertex_type:
+        (1) Initialize: Label each vertex with its own internal ID
+        (2) Propagate smaller internal IDs until no more ID changes can be Done
+*/
 
         MinAccum<int> @cc_id = 0;       //each vertex's tentative component id
         SumAccum<int> @old_id = 0;
@@ -16,7 +29,7 @@ CREATE QUERY conn_comp_enhanced (SET<VERTEX> vertex_types, STRING vt2,
                        x.@old_id = getvid(x)        
             ;
 
-# Propagate smaller internal IDs until no more ID changes can be DOne
+# Propagate smaller internal IDs until no more ID changes can be Done
         WHILE (start.size()>0) DO
                 start = SELECT t
                         FROM start:s -((edge_type|rev_edge_type):e)- :t

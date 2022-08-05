@@ -1,4 +1,20 @@
 CREATE QUERY predicting() FOR GRAPH CitationGraph SYNTAX V2 { 
+
+/*
+	Predicts the class of the papers in a citation network and 
+	returns accuracies. 
+	
+	No inputs
+	
+	Start from WORD vertices:
+	(1) Load weights into layer 0 and 1
+	
+	Using PAPER vertices:
+	(1) Foward propagation 
+		(a) Convolve
+		(b) Hidden layers
+		
+*/
   ArrayAccum<SumAccum<DOUBLE>> @@W_0[1433][16]; #1433 by 16
 	ArrayAccum<SumAccum<DOUBLE>> @@W_1[16][7];   #16 by 7
 	SumAccum<DOUBLE> @@accurate_cnt;
@@ -39,7 +55,7 @@ CREATE QUERY predicting() FOR GRAPH CitationGraph SYNTAX V2 {
 	        ACCUM t.@z_0 += product_ArrayAccum_const(s.@zeta_0,e.weight)
 	        POST-ACCUM
 	          s.@z_0 = ReLU_ArrayAccum(s.@z_0),
-  // hidden layer0 -> hidden layer1 */
+  	// hidden layer0 -> hidden layer1 */
 	          s.@zeta_1 += product_Matrix_Vector(@@W_1, s.@z_0)
 	          ;
 	          

@@ -1,8 +1,23 @@
 CREATE QUERY kcore_sub (STRING vertexType, STRING edgeType, INT verbosity) FOR GRAPH MyGraph RETURNS (MapAccum<INT, SetAccum<VERTEX>>) SYNTAX V2 {
-/* An implementation of Algorithm 2 in
- * Scalable K-Core Decomposition for Static Graphs Using a Dynamic Graph Data Structure,
- * Tripathy et al., IEEE Big Data 2018.
- * Returns a map <k, <vertex-list>> where <vertex-list> are those who are in that k-core but not (k+1)-core
+/* 
+    An implementation of Algorithm 2 in Scalable K-Core Decomposition for Static Graphs 
+    Using a Dynamic Graph Data Structure, Tripathy et al., IEEE Big Data 2018. 
+    Returns a map <k, <vertex-list>> where <vertex-list> are those who are in
+    that k-core but not (k+1)-core
+    
+    Sample inputs:
+    vertexType: claim
+    edgeType: associated
+    verbosity: 5
+    
+    Start from vertexType:
+    (1) Initialize @deg with vertexType's outdegree
+    (2) Find vertices whose degree < or = k and mark those vertices individually
+    (3) Set the core level of those vertices and collect those vertices
+    (4) Reduce degree of vertices
+    (5) Print @@core_list_map, list of vertices sorted by increasing core level 
+    
+    
  */
  
 

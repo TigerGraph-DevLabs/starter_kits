@@ -1,4 +1,19 @@
 CREATE QUERY test(VERTEX<USER> user) FOR GRAPH Recommender SYNTAX V2 { 
+
+/*
+	Outputs the real ratings provided by a user together with the predicted rating 
+	by the model
+	
+	Sample Input:
+	user: 1 | 2
+	
+	Starting with a user vertex:
+	(1) Select movies with edges to the user
+	(2) Sum accum to the predicted rating and average rating of the movie
+	(3) Print the real ratings by the user and the predicted model 
+	ratings
+	
+*/
 	//This query output the real ratings provided by a user together with the predicted rating by the model 
 	//The query input is a user id
 	//The query output is all the ratings given by the user and the ratings prediction

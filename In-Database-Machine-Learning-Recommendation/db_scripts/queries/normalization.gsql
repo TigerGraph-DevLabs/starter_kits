@@ -1,6 +1,18 @@
-CREATE QUERY normalization(/* Parameters here */) FOR GRAPH Recommender SYNTAX V2 { 
-	// This query normalizes the ratings by substracting each rating by the average rating of the movie.
-	// The average rating of each movie is computed from the training data
+CREATE QUERY normalization(/* Parameters here */) FOR GRAPH Recommender SYNTAX V2 { 	
+/*
+    Normalizes the ratings by subtracting each rating by the 
+    average rating of the movie from the training data.
+    
+    No inputs
+    
+    Starting with all MOVIE vertices:
+    (1) Select movies from the training data and calculate 
+    the average rating
+    (2) Subtract the average rating from each movie's 
+    rating
+    
+*/
+
   AvgAccum @avg_rating;
   Start = {MOVIE.*};
 	Start = SELECT s FROM Start:s -(rate:e)- USER:t

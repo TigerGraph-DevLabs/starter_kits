@@ -1,0 +1,20 @@
+CREATE QUERY README(/* Parameters here */) FOR GRAPH MyGraph SYNTAX V2 { 
+
+	STRING name = "Graph-Analytics-Shortest-Path-Algorithms";
+	STRING graph_description = "Identify the path through your network with the fewest number of hops.";
+	
+	STRING query_order = "1. add_weights, No order";
+	
+	STRING add_weights = "Uses the haversine formula to calculate the distances between " +
+		"airports by using their latitude and longitude coordinates.";
+	STRING shortest_ss_no_wt = "Single-Source Shortest Path without weights on edges. " +
+		"Calculates the shortest distance from the given vertex source to all other " +
+		"connected vertices, and shows one shortest path between them.";
+	STRING shortest_ss_pos_wt = "The Bellman-Ford algorithm for single-Source Shortest Path " +
+		"on directed/undirected graph with positive weight";
+	STRING shortest_ss_pos_wt_limits = "The Bellman-Ford algorithm for single-Source Shortest " +
+		"Path on directed/undirected graph with positive weight with limited number of hops " +
+		"and distance.";
+	
+	PRINT name, graph_description, query_order, add_weights, shortest_ss_no_wt, shortest_ss_pos_wt, shortest_ss_pos_wt_limits;
+}

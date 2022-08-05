@@ -1,6 +1,17 @@
 CREATE QUERY get_account_subgraph(SET<STRING> account_ids, BOOL include_attributes=FALSE)
   FOR GRAPH Entity_Resolution SYNTAX v2 { 
   
+  /*
+    Get subgraph given set of account ids
+    
+    Sample inputs:
+    account_ids: 1 | 2 | 3 
+    
+    (1) Get vertex set from input set
+    (2) Select users connected to accounts set and collect
+        Has_Account edges
+  */
+  
   ListAccum<EDGE> @@edges_to_display;
   INT numAccounts;
   INT numUsers;

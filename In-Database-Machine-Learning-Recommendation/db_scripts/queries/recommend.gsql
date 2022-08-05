@@ -1,4 +1,16 @@
 CREATE QUERY recommend(VERTEX<USER> user) FOR GRAPH Recommender SYNTAX V2 {
+/*
+    Outputs the top-10 movies recommended to a user. The movies are recommended 
+    based on the rating prediction.
+    
+    Sample inputs:
+    user: 1 | 2
+    
+    Starting with all movies:
+    (1) Compute the rating prediciton based on the model
+    (2) Get top 10 predicted ratings descending
+    
+*/
 	//This query output the top-10 movies recommended to a user
 	//The movies are recommended based on the rating prediction
 	SumAccum<DOUBLE> @predicted_rating;

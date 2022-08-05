@@ -1,7 +1,17 @@
 CREATE QUERY add_weights(BOOL overwrite) FOR GRAPH MyGraph SYNTAX V2 {
-/* This query uses the haversine formula to calculate the distances 
-between airports by using their latitude and longitude coordinates.
-The calculated distances are measured in miles and are added as edge weights.
+/* 
+	Uses the haversine formula to calculate the distances between 
+	airports by using their latitude and longitude coordinates.
+	The calculated distances are measured in miles and are added as 
+	edge weights.
+	
+	Sample Inputs:
+	overwrite: True | False
+	
+	Starting with all airports:
+	(1) Select target airports and calculate the distance
+		between source and target if overwrite is True
+	
 */
 	
 	ListAccum<edge> @@dont_Change_List;

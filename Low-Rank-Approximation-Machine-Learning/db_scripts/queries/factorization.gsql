@@ -1,4 +1,16 @@
 CREATE QUERY factorization(DOUBLE learning_rate = 0.001, DOUBLE regularization_factor = 0.00005, INT Iter=30) FOR GRAPH LowRankApproximation SYNTAX V2 {
+	/*
+	    Factorizes the loaded sparse matrix into two low-rank matrices U and V using 
+	    gradient descent algorithm.
+
+	    No inputs
+
+	    Starting with all matrix rows:
+	    (1) Pass u and v to local accum
+	    (2) Obtain the row vectors using gradient descent algorithm
+	    (3) Calculate RMSE
+	*/
+	
 	// This query factorize the loaded sparse matrix into two low-rank matrices U and V using gradient descent algorithm 
 	// The length of row vectors is set as 19. This number has to be the same as the len_of_rowVector in the initialization query
 	// The query inputs are the learning rate, regularization_factor and the number of iterations

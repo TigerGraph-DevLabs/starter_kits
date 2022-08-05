@@ -1,0 +1,13 @@
+CREATE QUERY README(/* Parameters here */) FOR GRAPH sdmGraph SYNTAX V2 { 
+
+STRING name = "Machine-Learning-and-Real-time-Fraud-Detection";
+STRING graph_description = "Mobile Industry example for detecting fraud in real-time " +
+   "and generating graph-based features for training the machine learning solution";
+	
+STRING query_order = "No order";
+
+STRING feature_collection = "Returns stable connections given phone id, number of calls, and duration limit."; 
+
+PRINT name, graph_description, query_order, feature_collection;
+	
+}

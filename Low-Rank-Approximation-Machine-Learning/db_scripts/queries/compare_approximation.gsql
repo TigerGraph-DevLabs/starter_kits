@@ -1,4 +1,19 @@
 CREATE QUERY compare_approximation(VERTEX<MATRIX_ROW> row_index) FOR GRAPH LowRankApproximation SYNTAX V2 { 
+/*
+    Outputs the element values of one row of the loaded matrix specified by the 
+    inputed row index together with the approximated element 
+    
+    Sample inputs:
+    row_index: 
+    
+    Starting with a row index:
+    (1) Get columns of elements in row
+    (2) Accum to approximated values and real values
+    	 t.@approximated_value += dotProduct_List_List(s.u,t.v),
+	 t.@real_value += e.element_value
+    (3) Outputs all the existing element values in the given row
+*/
+
 	// This query output the element values of one row of the loaded matrix specified by the inputed row index together with the approximated element values 
 	// The query input is a row index
 	// The query output is all the existing element values in the given row. The column index is shown as the v_id of the MATRIX_COLUMN vertex. 

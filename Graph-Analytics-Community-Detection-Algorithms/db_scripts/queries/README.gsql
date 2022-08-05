@@ -1,0 +1,46 @@
+CREATE QUERY README() FOR GRAPH MyGraph {
+/*
+  IMPORANT : PLEASE INSTALL AND RUN the insert_all_referrals QUERY FIRST.
+	
+	THE REFERRAL EDGE IS USED IN OTHER QUERIES.
+*/
+
+	STRING name = "Graph-Analytics-Community-Detection-Algorithms";
+	STRING graph_description = "Find communities of a specific type in your network " +
+		(Louvain Method, Connected Components, K-Core Decomposition, strongly connected components)";
+		
+	STRING query_order = "1. insert_all_referrals"; 
+	
+	STRING Print_community = "Returns edges of community given prescriber";
+	STRING algo_louvain = "Louvain Method with Parallelism and Refinement https://arxiv.org/pdf/1304.4453 " +
+		"The minimum label heuristics are implemented: https://doi.org/10.1016/j.parco.2015.03.003";
+	STRING algo_louvain_enhanced = "Louvain Method with Parallelism and Refinement https://arxiv.org/pdf/1304.4453 " +
+		"The minimum label heuristics are implemented: https://doi.org/10.1016/j.parco.2015.03.003";
+	STRING algo_page_rank = "Compute the pageRank score for each vertex in the GRAPH";
+	STRING conn_comp = "Identifies the Connected Components (undirected edges)";
+	STRING conn_comp_enhanced = "Identifies the Connected Components (undirected edges)";
+	STRING get_community = "Finds the vertices and interconnecting edges associated either with the given prescriber_Id, " +
+		"or if the prescriber_Id is not provided (empty string), then for the given community_Id.";
+	STRING insert_all_referrals = "Inserts and returns the total referrals across prescribers";
+	STRING insert_referrals = "Inserts and returns number of referral insertions from unvisited claims";
+	STRING kcore_decomp = "Outputs the k-core vertex membership for each value of k from k_min to k_max. ";
+	STRING kcore_max = "An implementation of Algorithm 2 in Scalable K-Core Decomposition for Static Graphs " +
+		"Using a Dynamic Graph Data Structure, Tripathy et al., IEEE Big Data 2018.";
+	STRING kcore_sub = "An implementation of Algorithm 2 in Scalable K-Core Decomposition for Static Graphs " +
+		"Using a Dynamic Graph Data Structure, Tripathy et al., IEEE Big Data 2018. ";
+	STRING scc = "Detects strongly connected components based on the following papers: " +
+		"https://www.sandia.gov/~apinar/papers/irreg00.pdf, " +
+		"https://www.sciencedirect.com/science/article/pii/S0743731505000535, " +
+		"https://stanford-ppl.github.io/website/papers/sc13-hong.pdf";
+	STRING scc_enhanced = "Detects strongly connected components based on the following papers: " +
+		"https://www.sandia.gov/~apinar/papers/irreg00.pdf, " +
+		"https://www.sciencedirect.com/science/article/pii/S0743731505000535, " +
+		"https://stanford-ppl.github.io/website/papers/sc13-hong.pdf";
+	STRING select_subgraph = "Returns edges and vertices of subgraph";
+	
+	PRINT name, graph_description, query_order, Print_community, algo_louvain, algo_louvain_enhanced, algo_page_rank;
+	PRINT conn_comp, conn_comp_enhanced, get_community, insert_all_referrals, insert_referrals;
+	PRINT kcore_decomp, kcore_max, kcore_sub, scc, scc_enhanced, select_subgraph;
+
+	print "I read this!";
+}

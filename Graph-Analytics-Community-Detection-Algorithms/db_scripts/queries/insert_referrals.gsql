@@ -1,6 +1,22 @@
 CREATE QUERY insert_referrals(VERTEX<Prescriber> input_prescriber) 
 	FOR GRAPH MyGraph RETURNS (INT) SYNTAX V2 {
 	
+	/*
+	
+	Inserts and returns number of referral insertions from unvisited claims
+	
+	Sample input:
+	input_prescriber: pre38
+	
+	Start from the input_prescriber:
+	(1) Select claims from input_prescriber and mark as visited
+	(2) Select patients from the claims and update date lists
+	(3) Select other claims from patients in (2) that are unvisited 
+	(4) Select claims from (3) and insert into referral 
+	
+	
+	*/
+	
 	OrAccum<BOOL> @visited, @is_referred_claim;
 	ListAccum<DATETIME> @date_list;
 	SumAccum<INT> @@num_insertions;

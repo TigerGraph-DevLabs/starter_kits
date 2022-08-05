@@ -1,9 +1,22 @@
 CREATE QUERY initialization(/* Parameters here */) FOR GRAPH CitationGraph SYNTAX V2 {
-	/*This query normalizes the weights on CITE edges according to the outdegrees(CITE) of the source
-  and target vertices, normalizes the weights on HAS edges according the outdegrees(HAS) of the PAPER vertices,
-  populates the words attribute with (word indx -> weight),
-  and splits PAPER vertices into testing, validation and training sets, */
-	MapAccum<INT,DOUBLE> @word_Map;
+/* 
+  
+   Initializes weights on edges and attributes before splitting vertices into 
+   training, validation, and testing sets.  
+  
+   No inputs
+  
+   Starting from all PAPER vertices:
+   (1) Normalize the weights on CITE edges according to the outdegrees(CITE) 
+   of the source and target vertices
+   (2) Normalize the weights on HAS edges according the outdegrees(HAS) of 
+   the PAPER vertices
+   (3) Populate the words attribute with (word indx -> weight)
+   (4) Split PAPER vertices into testing, validation and training sets
+  
+*/
+
+  MapAccum<INT,DOUBLE> @word_Map;
 	
   Papers = {PAPER.*};
 	

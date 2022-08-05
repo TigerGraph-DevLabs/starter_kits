@@ -1,4 +1,20 @@
 CREATE QUERY app_impact(vertex<Application> a, float decay, int k) FOR GRAPH Storage SYNTAX V2 { 
+/*
+
+  Detect the top k applications which have the most impact on a given
+  application.
+
+  Sample inputs:
+  a: 9998 | 9649 | 5679
+  decay: 0.5 | 0.8 | 1
+  k: 5 | 4 | 10
+
+  Starting from an input application,
+  (1) Find all applications connected to the input application with 
+  an AppCall edge and calculate their impact score and edge set. 
+  (2) Display the resulting applications ordered by impact score. 
+
+*/
   
   int iteration = 0;
   
@@ -19,9 +35,9 @@ CREATE QUERY app_impact(vertex<Application> a, float decay, int k) FOR GRAPH Sto
     result = result UNION start;
   end;
   
-  Result = SELECT s from result:s
+  final = SELECT s from result:s
            ORDER BY s.@impact_score DESC
            LIMIT k;
   
-  print Result;
+  print final;
 }

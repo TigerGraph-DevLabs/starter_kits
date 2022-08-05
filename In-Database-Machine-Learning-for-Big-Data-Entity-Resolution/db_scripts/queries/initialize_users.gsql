@@ -1,7 +1,13 @@
 CREATE QUERY initialize_users() FOR GRAPH Entity_Resolution SYNTAX v2 { 
-// Create a user vertex for each account and connecs the attributes
-// (IP, Email, Device, Phone, Last_Name, address) of the account to the user. 
-  
+/*
+    Create a user vertex for each account and connects the attributes
+    (IP, Email, Device, Phone, Last_Name, address) of the account to the user. 
+    
+    No inputs
+    
+    (1) Initialize each account with a user
+    (2)Connect the User to all the attributes of their account
+*/
 	// Initialize each account with a user 
 	Accounts = SELECT s FROM Account:s
 		WHERE s.outdegree("Has_Account")==0

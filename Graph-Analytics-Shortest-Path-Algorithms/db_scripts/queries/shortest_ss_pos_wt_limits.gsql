@@ -1,8 +1,22 @@
 CREATE QUERY shortest_ss_pos_wt_limits (VERTEX source, BOOL display, INT maxHops, INT maxDest) FOR GRAPH MyGraph SYNTAX V2 {
 
-/* The Bellman-Ford algorithm for single-Source Shortest Path 
-   on directed/undirected graph with positive weight.
-   It will not detect negative cycle in this algorithm. 
+/*  
+	The Bellman-Ford algorithm for single-Source Shortest Path 
+	on directed/undirected graph with positive weight with 
+	limited number of hops and distance.
+	It will not detect negative cycle in this algorithm. 
+   
+   	Sample Inputs:
+	source: airport = "Goroka Airport"
+	display: True | False
+	maxHops: 3
+	maxDest: 10
+   
+	Start with the source vertex:
+	(1) Get connected vertices and update local accumulators
+	(2) Do V-1 iterations: Consider whether each edge lowers the best-known distance.
+	(3) Calculates shortest paths and displays results if display is True
+   
 */
         TYPEDEF TUPLE<FLOAT dist, VERTEX pred> pathTuple;    
         HeapAccum<pathTuple>(1, dist ASC) @min_Path;

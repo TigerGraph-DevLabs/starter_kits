@@ -1,8 +1,23 @@
 CREATE QUERY initialization(INT num_latent_factors = 19) FOR GRAPH Recommender SYNTAX V2 { 
+/*
+    Initializes the latent factor vectors for the users and the movies
+    by a normal distributed random number generator.
+    
+    No inputs
+    
+    Starting with all MOVIE vertices:
+    (1) Assign a random number to the latent factor vectors of the 
+    movies
+    
+    Using all USER vertices:
+    (1) Assign a random number to the latent factor vectors of the 
+    users
+    
+*/
 	// This query initialize the latent factor vectors for the users and the movies
 	// The elements in the latent factor vectors are initialized by a normal distributed random number generator
 	// The query inputs are the standard deviation and the mean of the normal distribution 
-	
+
 	ListAccum<DOUBLE> @init;
 	//The length of the latent factor vector (i.e. the number of features) is set as 19. This number has to be the same as the num_latent_factors in the training query
 	

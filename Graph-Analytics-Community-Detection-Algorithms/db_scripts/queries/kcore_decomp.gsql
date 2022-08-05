@@ -1,12 +1,23 @@
 CREATE QUERY kcore_decomp(STRING vertex_type, STRING edge_type, INT k_min, 
   INT k_max = -1, BOOL show_membership=false, BOOL show_shells=true) 
   FOR GRAPH MyGraph SYNTAX V2 { 
-/* Outputs the k-core vertex membership for each value of k from k_min to k_max.
- * By definition, for k=0, the vertex set = the entire graph.
- * As k increases, V(k) is a subset of V(k-1).
- * If k_max < 0, then the query proceeds until it reaches the maximal k-core.
- * Calls kcore_sub().
+/* 
+  Outputs the k-core vertex membership for each value of k from k_min to k_max.
+  By definition, for k=0, the vertex set = the entire graph.
+  As k increases, V(k) is a subset of V(k-1).
+  If k_max < 0, then the query proceeds until it reaches the maximal k-core.
+  Calls kcore_sub().
+  
+  Sample inputs:
+  vertex_type: claim
+  edge_type: associated
+  k_min: 0
+  
+  (1) print just the size of each k-core
+  (2) print the membership of each k-core
+  
  */
+ 
   MapAccum<INT, SetAccum<VERTEX>> @@core_list_map; // Map <k, k-core_vertex_set>
   SetAccum<VERTEX> @@k_core_vertices;              // vertex set for k_max
   ListAccum<EDGE> @@induced_edges;                // optional output

@@ -1,19 +1,32 @@
 CREATE QUERY README(/* Parameters here */) FOR GRAPH Recommender SYNTAX V2 { 
   /* 
-The recommendation system can predict the movie ratings based on the latent factor (model-based) method.
-To train the latent factor model, run the queries below in sequence 
-1. splitData
-2. normalization
-3. initialization
-4. training
-
-To test the model and use it for recommendation, run the queries below
-1. test
-2. recommend
-
-To re-train model using different training data split, the data need to be reloaded before repeat the steps above.
-The order of the queries need to be followed to ensure the correctness of the result.
+	To re-train model using different training data split, 
+	the data need to be reloaded before repeating the steps.
+	The order of the queries need to be followed to ensure the 
+	correctness of the result.
 */ 
+
+STRING name = "In Database Machine Learning Recommendation";
+STRING graph_description = "Provides content and products suggestions" +
+	"using an in-database machine learning recommendation system. " +
+	"The recommendation system can predict the movie ratings based " +
+	"on the latent factor (model-based) method.";
 	
-  PRINT "README works!"; 
+STRING query_train_order = "1. splitData, 2. normalization, 3. initialization, 4. training";
+STRING query_test_order = "1. test, 2. recommend";
+
+STRING splitData = "Splits rating data into validation set and training set " + 
+	"with 30% data for testing.";
+STRING normalization = "Normalizes the ratings by subtracting each rating by " + 
+	"the average rating of the movie from the training data.";
+STRING initialization = "Initializes the latent factor vectors for the users and the movies
+    by a normal distributed random number generator.";
+STRING training = "Trains recommender model using the gradient descent algorithm.";
+STRING test = "Outputs the real ratings provided by a user together with the predicted rating by the model.";
+STRING recommend = "Outputs the top-10 movies recommended to a user";
+STRING cal_avg_rating = "Calculates the average rating across all movies.";
+
+
+PRINT name, graph_description, query_train_order, query_test_order, splitData, normalization, initialization, training, test, recommend,cal_avg_rating;
+	
 }

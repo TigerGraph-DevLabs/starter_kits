@@ -1,12 +1,18 @@
 CREATE QUERY algo_page_rank(FLOAT max_change = 0.001, INT max_iter = 25, 
         FLOAT damping = 0.85, INT output_limit) FOR GRAPH MyGraph SYNTAX V2 { 
 
-	# Compute the pageRank score for each vertex in the GRAPH
-# In each iteration, compute a score for each vertex:
-#   score = (1-damping) + damping*sum(received scores FROM its neighbors).
-# The pageRank algorithm stops when either of the following is true:
-#  a) it reaches max_iter iterations;
-#  b) the max score change for any vertex compared to the last iteration <= max_change.
+/*
+	Compute the pageRank score for each vertex in the GRAPH
+
+	No inputs
+	
+	From all Prescribers:
+	(1) In each iteration, compute a score for each vertex:
+	   score = (1-damping) + damping*sum(received scores FROM its neighbors).
+	(2) The pageRank algorithm stops when either of the following is true:
+		a) it reaches max_iter iterations;
+		b) the max score change for any vertex compared to the last iteration <= max_change.
+*/
 
         TYPEDEF TUPLE<vertex Vertex_ID, FLOAT score> Vertex_Score;
         HeapAccum<Vertex_Score>(output_limit, score DESC) @@top_scores;
