@@ -35,11 +35,35 @@ CREATE QUERY README() FOR GRAPH Entity_Resolution SYNTAX V2 {
   ***
   
   Once the Entity Resolution is complete, you can see some of the results:
-  get_entity_subgraph: finds the User of a given Account, the other
+  get_account_subgraph: finds the User of a given Account, the other
     Accounts of that User, and the attribute vertices of this User.
 	recommend_videos: find all the accounts linked via entity resolution to
     the input account, then list videos that have the most features in common
     with the videos already watched by this user.
 	*/ 
-  PRINT version;
+
+  STRING name = "In-Database-Machine-Learning-for-Big-Data-Entity-Resolution";
+  STRING graph_description = "Finds Accounts that share many of the same or similar" + 
+  	"personal attributes and therefore seem to represent the same User.";
+	
+  STRING Jaccard_similarity_order = "1. initialize_users, 2. connect_jaccard_sim, 3. merge_connected_users, 4. repeat 2. and 3."; 
+  STRING Exact_and_approximate_matching_order = "1.initialize_users, 2. util_set_weights, 3. connect_weighted_match, " +
+  	"4. score_similar_attributes, 5. merge_similar_users, 6. repeat 3,4,5";
+  
+  STRING initialize_users = "Create a user vertex for each account and connects the attributes of the account to the user.";
+  STRING connect_jaccard_sim = "Calculate Jaccard similarity between each vertex and every other vertex.";
+  STRING merge_connected_users = "Connect users having sufficient shared attributes.";
+  STRING util_set_weights = "Sets all weights to calibrate the scoring.";
+  STRING connect_weighted_match = "Connect users that have sufficient shared attributes.";
+  STRING score_similar_attributes = "Considering only User-User pairs where this is already some match of attribute values, " +
+  	compare their names and their addresses using JaroWinkler distance.";
+  STRING merge_similar_users = "N/A";
+  STRING get_account_subgraph = "Get subgraph given set of account ids";
+  STRING recommend_videos = "Recommend videos to User.";
+  
+
+  PRINT name, version, graph_description, Jaccard_similarity_order, Exact_and_approximate_matching_order;
+  PRINT initialize_users, connect_jaccard_sim, merge_connected_users;
+  PRINT util_set_weights, connect_weighted_match, score_similar_attributes, merge_similar_users;
+  PRINT get_account_subgraph, recommend_videos;
 }
