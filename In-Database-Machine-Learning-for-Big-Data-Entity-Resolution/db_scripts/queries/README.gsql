@@ -19,7 +19,7 @@ CREATE QUERY README() FOR GRAPH Entity_Resolution SYNTAX V2 {
   Method 2: Exact and approximate matching
   1a. Run initialize_users to create a tentative User linked to each Account.
   1b. Run util_set_weights to load weights used to calibrate the scoring.
-	2a. Run connect_weighted_match to link Users whose matching attribute
+  2a. Run connect_weighted_match to link Users whose matching attribute
      values score enough points.
   2b. Run score_similar_attributes to add additional points for 
       approximate matches.
