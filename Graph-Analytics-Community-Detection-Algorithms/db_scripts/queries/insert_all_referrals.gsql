@@ -1,4 +1,14 @@
 CREATE QUERY insert_all_referrals () FOR GRAPH MyGraph SYNTAX V2 { 
+
+/*
+
+	Inserts and returns the total referrals across prescribers
+	
+	No inputs
+	
+	From all Prescriber vertices:
+	(1) Select all prescribers, insert referrals, and count the number of referrals
+*/
   
 	SumAccum<INT> @@num_insertions;
 	
