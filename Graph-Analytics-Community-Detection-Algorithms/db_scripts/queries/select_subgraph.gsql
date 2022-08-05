@@ -1,5 +1,16 @@
 CREATE QUERY select_subgraph(STRING vertex_type, STRING edge_type) FOR GRAPH MyGraph SYNTAX V2 { 
-  
+/*
+	Returns edges and vertices of subgraph
+	
+	Sample inputs:
+	vertex_type: claim
+	edge_type: associated
+	
+	From given vertex_type:
+	(1) Select edge list and target set from given edge_type
+	
+*/
+
 	ListAccum<EDGE> @@edge_list;
 	
 	source_set = {vertex_type};
