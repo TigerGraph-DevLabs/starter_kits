@@ -1,6 +1,18 @@
 CREATE QUERY print_community(vertex<Prescriber> input_prescriber) FOR GRAPH MyGraph SYNTAX V2 { 
-  /* Write query logic here */ 
-  //PRINT "Print_community works!";
+  /* 
+  
+  Returns edges of community given prescriber
+  
+  Sample input:
+  input_prescriber: pre14 | pre25
+  
+  Using all Prescribers:
+  (1) Select presribers where their community id
+  	matches the input_prescriber and the 
+	prescriber they refer
+  (2) Return referral edges of the community
+  
+  */ 
 	
 	ListAccum<EDGE> @@edge_list;
 	
