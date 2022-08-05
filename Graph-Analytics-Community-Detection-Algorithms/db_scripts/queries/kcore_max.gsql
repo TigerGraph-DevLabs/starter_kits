@@ -1,8 +1,19 @@
 CREATE QUERY kcore_max (STRING vertex_type, STRING edge_type, BOOL induced_edges, 
   INT verbosity) FOR GRAPH MyGraph SYNTAX V2 {
-/* An implementation of Algorithm 2 in
- * Scalable K-Core Decomposition for Static Graphs Using a Dynamic Graph Data Structure,
- * Tripathy et al., IEEE Big Data 2018.
+/* 
+    An implementation of Algorithm 2 in Scalable K-Core Decomposition for 
+    Static Graphs Using a Dynamic Graph Data Structure, Tripathy et al., 
+    IEEE Big Data 2018.
+    
+    Sample inputs:
+    vertex_type: claim
+    edge_type: associated
+    induced_egdes: False
+    verbosity: 3
+    
+    (1) Get vertex core numbers from kcore_sub query
+    (2) Print results for k, kcore_vertices, etc
+    
  */
  
   MapAccum<INT, SetAccum<VERTEX>> @@core_list_map; // Map <k, k-core_vertex_set>
