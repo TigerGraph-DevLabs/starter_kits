@@ -4,13 +4,27 @@ CREATE QUERY algo_louvain_enhanced(STRING vertex_type, STRING edge_type,
   FOR GRAPH MyGraph SYNTAX V2 {
 
 /*
-* Louvain Method with Parallelism and Refinement
-* https://arxiv.org/pdf/1304.4453
-* The minimum label heuristics are implemented: https://doi.org/10.1016/j.parco.2015.03.003
-* iter: There are three phases in the algorithm -- move, merge and refine. Their max number of iterations are set by iter1, iter2, iter3 respectively.
-* split: To save memory, split number is 10 by default. When the split number is larger, the query is closer to sequential Louvain Method, which is slower. When the split number is 1, the query is parallel, but requires more memory. 
-* output_level: 0, only list number; 1, also list members
-* fComm, fDist: files to store community label and community distribution
+  Louvain Method with Parallelism and Refinement
+  https://arxiv.org/pdf/1304.4453
+  The minimum label heuristics are implemented: https://doi.org/10.1016/j.parco.2015.03.003
+  
+  Inputs:
+  iter: There are three phases in the algorithm -- move, merge and refine. Their max number of iterations are set by iter1, iter2, iter3 respectively.
+  split: To save memory, split number is 10 by default. When the split number is larger, the query is closer to sequential Louvain Method, which is slower. When the split number is 1, the query is parallel, but requires more memory. 
+  output_level: 0, only list number; 1, also list members
+  fComm, fDist: files to store community label and community distribution
+ 
+	
+	(1) Initialize: count edges and set a unique cluster ID for each vertex
+	(2) Phase 1 -- Move: incrementally calculates the modularity change of moving a vertex into every other community 
+	and moves the vertex to the community with the highest modularity change
+		(a) For each vertex, calculate the change in modularity FROM adding it to each of the nearby clusters
+		(b) Add vertex to cluster with highest positive change in modularity
+		(c) Repeat the above until no vertices change cluster anymore
+	(3) Phase 2 --  Merge: Coarsen the graph by aggregating the vertices which are assigned in the same community into one vertex
+	(4) Phase 3 -- Refinement: run the first phase again on each vertex to do some small adjustments for the resulting communities
+
+
 */
   TYPEDEF TUPLE <INT csize, INT number> Cluster_Num;
   TYPEDEF TUPLE <VERTEX node, INT cid, FLOAT delta_Q> V_Delta_Q;
