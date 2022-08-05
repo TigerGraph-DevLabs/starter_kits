@@ -1,7 +1,7 @@
 CREATE QUERY get_community(STRING prescriber_Id, INT community_Id) FOR GRAPH MyGraph SYNTAX V2 {
   /* 
   
-    This query finds the vertices and interconnecting edges associated either with the given
+    Finds the vertices and interconnecting edges associated either with the given
     prescriber_Id, or if the prescriber_Id is not provided (empty string), then
     for the given community_Id.
     NOTE: This algorithm requires that the community_Id attribute has been set,
