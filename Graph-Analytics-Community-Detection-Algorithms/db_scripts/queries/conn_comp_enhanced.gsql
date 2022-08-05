@@ -4,11 +4,11 @@ CREATE QUERY conn_comp_enhanced (SET<VERTEX> vertex_types, STRING vt2,
 	Identifies the Connected Components (undirected edges)
 	
 	Sample inputs:
-        vertex_type:
-	vt2:
-        edge_type:
-        rev_edge_type:
-	output_level:
+	vertex_type: claim
+	vt2: N/A
+        edge_type: associated
+        rev_edge_type: reverse_associated
+	output_level: 1 
           
         Start from given vertex_type:
         (1) Initialize: Label each vertex with its own internal ID
