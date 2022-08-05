@@ -59,7 +59,7 @@ CREATE QUERY README() FOR GRAPH Entity_Resolution SYNTAX V2 {
   	compare their names and their addresses using JaroWinkler distance.";
   STRING merge_similar_users = "N/A";
   STRING get_account_subgraph = "Get subgraph given set of account ids";
-  STRING recommend_videos = "Recommend videos to User.";
+  STRING recommend_videos = "Recommend videos to User by most genres or keywords in common with the played videos.";
   
 
   PRINT name, version, graph_description, Jaccard_similarity_order, Exact_and_approximate_matching_order;
