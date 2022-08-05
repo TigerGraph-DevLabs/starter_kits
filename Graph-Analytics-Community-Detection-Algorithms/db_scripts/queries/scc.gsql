@@ -1,14 +1,25 @@
 CREATE QUERY scc (INT iter = 500, INT iter_wcc = 5, INT top_k_dist = 10) FOR GRAPH MyGraph SYNTAX V2 {
-/* This query detects strongly connected components based on the following papers:
- * https://www.sandia.gov/~apinar/papers/irreg00.pdf
- * https://www.sciencedirect.com/science/article/pii/S0743731505000535
- * https://stanford-ppl.github.io/website/papers/sc13-hong.pdf
+/* 
+	Detects strongly connected components based on the following papers:
+	https://www.sandia.gov/~apinar/papers/irreg00.pdf
+	https://www.sciencedirect.com/science/article/pii/S0743731505000535
+	https://stanford-ppl.github.io/website/papers/sc13-hong.pdf
 
- * iter: number of iteration of the algorithm
- * iter_wcc: find weakly connected components for the active vertices in this iteration, since the largest sccs are already found after several iterations; usually a small number(3 to 10)
- * top_k_dist: top k result in scc distribution
+	Inputs:
+	iter: number of iteration of the algorithm
+	iter_wcc: find weakly connected components for the active vertices in this iteration, since the largest sccs are already found after several iterations; usually a small number(3 to 10)
+	top_k_dist: top k result in scc distribution
 
- * DISTRIBUTED QUERY mode for this query is supported from TG 2.4.
+ 	*DISTRIBUTED QUERY mode for this query is supported from TG 2.4.
+	
+	Select all Prescribers:
+	(1) Initialize accumulators
+	(2) Trim size 1 SCC
+	(3) Get WCC
+	(4) Mark forward set
+	(5) Mark backward set
+	(5) Return results of SCC detection
+	
  */
         TYPEDEF TUPLE <INT csize, INT num> cluster_num;
         MapAccum<INT, INT> @@cluster_size_map, @@cluster_dist_map;
