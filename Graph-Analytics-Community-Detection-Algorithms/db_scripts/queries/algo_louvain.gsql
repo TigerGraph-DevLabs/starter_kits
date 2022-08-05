@@ -13,11 +13,12 @@ CREATE QUERY algo_louvain(INT iter1 = 10, INT iter2 = 10, INT iter3 = 10, INT sp
 	fComm, fDist: files to store community label and community distribution
 	
 	(1) Initialize: count edges and set a unique cluster ID for each vertex
-	(2) Phase 1 -- Move
+	(2) Phase 1 -- Move: incrementally calculates the modularity change of moving a vertex into every other community 
+	and moves the vertex to the community with the highest modularity change
 		(a) For each vertex, calculate the change in modularity FROM adding it to each of the nearby clusters
 		(b) Add vertex to cluster with highest positive change in modularity
 		(c) Repeat the above until no vertices change cluster anymore
-	(3) Phase 2 --  Merge
+	(3) Phase 2 --  Merge: Coarsen the graph by aggregating the vertices which are assigned in the same community into one vertex
 		(a) Select the vertices with minimal internal id to represent the coarsened graph
 		(b) Get @cweight from totalIncident
 		(c) Calculate.num_patient incident from vertex to cluster in coarsened graph; change every interation
