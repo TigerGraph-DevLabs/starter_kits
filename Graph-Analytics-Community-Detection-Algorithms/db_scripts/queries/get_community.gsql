@@ -1,10 +1,22 @@
 CREATE QUERY get_community(STRING prescriber_Id, INT community_Id) FOR GRAPH MyGraph SYNTAX V2 {
-  /* This query finds the vertices and interconnecting edges associated either with the given
-   * prescriber_Id, or if the prescriber_Id is not provided (empty string), then
-   * for the given community_Id.
-   * NOTE: This algorithm requires that the community_Id attribute has been set,
-   * by running the alg_louvain query,
+  /* 
+  
+    This query finds the vertices and interconnecting edges associated either with the given
+    prescriber_Id, or if the prescriber_Id is not provided (empty string), then
+    for the given community_Id.
+    NOTE: This algorithm requires that the community_Id attribute has been set,
+    by running the alg_louvain query,
+  
+    Sample inputs:
+    prescriber_Id: pre78 | pre30
+    community_Id: 10
+    
+    Start from all Prescribers:
+    (1) Select prescribers where the id equals the given prescriber_id and set comm_Id
+    (2) Get all the vertices and intercomnnecting edges with the give comm_Id
+   
    */
+   
   SetAccum<EDGE> @@edge_list;
   INT comm_Id;
   
@@ -20,7 +32,7 @@ CREATE QUERY get_community(STRING prescriber_Id, INT community_Id) FOR GRAPH MyG
   END;
   PRINT comm_Id;
   
-  // Get all the vertices and intercomnnecting edges with the give comm_Id
+  // Get all the vertices and intercomnnecting edges with the given comm_Id
   comm_vertices = SELECT s
     FROM start:s -(referral>:e)- :t
     WHERE s.communityId == comm_Id AND t.communityId == comm_Id
