@@ -2,13 +2,27 @@ CREATE QUERY algo_louvain(INT iter1 = 10, INT iter2 = 10, INT iter3 = 10, INT sp
         Bool sort_by_pre_ID, Bool sort_by_comm_ID) FOR GRAPH MyGraph SYNTAX V2 {
 
 /*
-* Louvain Method with Parallelism and Refinement
-* https://arxiv.org/pdf/1304.4453
-* The minimum label heuristics are implemented: https://doi.org/10.1016/j.parco.2015.03.003
-* iter: There are three phases in the algorithm -- move, merge and refine. Their max number of iterations are set by iter1, iter2, iter3 respectively.
-* split: To save memory, split number is 10 by default. When the split number is larger, the query is closer to sequential Louvain Method, which is slower. When the split number is 1, the query is parallel, but requires more memory. 
-* output_level: 0, only list number; 1, also list members
-* fComm, fDist: files to store community label and community distribution
+	Louvain Method with Parallelism and Refinement
+	https://arxiv.org/pdf/1304.4453
+	The minimum label heuristics are implemented: https://doi.org/10.1016/j.parco.2015.03.003
+
+	Inputs:
+	iter: There are three phases in the algorithm -- move, merge and refine. Their max number of iterations are set by iter1, iter2, iter3 respectively.
+	split: To save memory, split number is 10 by default. When the split number is larger, the query is closer to sequential Louvain Method, which is slower. When the split number is 1, the query is parallel, but requires more memory. 
+	output_level: 0, only list number; 1, also list members
+	fComm, fDist: files to store community label and community distribution
+	
+	(1) Initialize: count edges and set a unique cluster ID for each vertex
+	(2) Phase 1 -- Move
+		(a) For each vertex, calculate the change in modularity FROM adding it to each of the nearby clusters
+		(b) Add vertex to cluster with highest positive change in modularity
+		(c) Repeat the above until no vertices change cluster anymore
+	(3) Phase 2 --  Merge
+		(a) Select the vertices with minimal internal id to represent the coarsened graph
+		(b) Get @cweight from totalIncident
+		(c) Calculate.num_patient incident from vertex to cluster in coarsened graph; change every interation
+	(4) Phase 3 -- Refinement: run the first phase again on each vertex to do some small adjustments for the resulting communities
+
 */
 	TYPEDEF TUPLE <INT csize, INT number> Cluster_Num;
 	TYPEDEF TUPLE <VERTEX node, INT cid, FLOAT deltaQ> V_Delta_Q;
@@ -242,7 +256,6 @@ CREATE QUERY algo_louvain(INT iter1 = 10, INT iter2 = 10, INT iter3 = 10, INT sp
 		log(debug > 0, "[redrain]#2_merge", iteration2, @@modularity2);
 	END; // outer WHILE
        
-
 # Phase 3 -- Refinement
 	iteration = 0;
 	@@modularity = 0;
